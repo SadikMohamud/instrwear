@@ -1,0 +1,5 @@
+# Django
+#.sqlite3
+.sqlite3.bak-*
+__pycache__/
+*.pyc
