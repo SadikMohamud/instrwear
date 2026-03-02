@@ -17,13 +17,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from marketplace.views import landing
-from accounts.views import login_view
-
+from accounts.views import login_view, logout_view
+from core.views import shopper_dashboard, merchant_dashboard
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', landing, name='landing'),
+
     path('accounts/login/', login_view, name='login'),
+    path('accounts/logout/', logout_view, name='logout'),
+    
+
+    path("shopper/dashboard/", shopper_dashboard, name="shopper_dashboard"),
+
+    path("merchant/dashboard/", merchant_dashboard, name="merchant_dashboard")
 ]
 
