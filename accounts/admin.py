@@ -1,25 +1,28 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, MerchantProfile
+from .models import CustomUser
+
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    # Show role on the list page
-    list_display = ("username", "email", "role", "is_staff", "is_superuser")
-    list_filter = ("role", "is_staff", "is_superuser", "is_active")
-    search_fields = ("username", "email")
+    model = CustomUser
 
-    # Add role field to the edit form
-    fieldsets = UserAdmin.fieldsets + (
+    ordering = ("email",)
+    list_display = ("email", "role", "is_staff", "is_active")
+    search_fields = ("email",)
+    list_filter = ("role", "is_staff")
+
+    fieldsets = (
+        (None, {"fields": ("email", "password")}),
         ("Role", {"fields": ("role",)}),
+        ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
     )
 
-    # Add role field to the create form
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        ("Role", {"fields": ("role",)}),
+    add_fieldsets = (
+        (None, {
+            "classes": ("wide",),
+            "fields": ("email", "role", "password1", "password2"),
+        }),
     )
 
-@admin.register(MerchantProfile)
-class MerchantProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "business_name",)
-    search_fields = ("business_name", "user__username", "user__email")
+    filter_horizontal = ("groups", "user_permissions")
