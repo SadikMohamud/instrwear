@@ -1,6 +1,9 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.shortcuts import redirect, render
+
+User = get_user_model()
+
 
 # Create your views here.
 
@@ -20,13 +23,11 @@ def login_view(request):
 
         login(request, user)
         messages.success(request, "Logged in successfully.")
-        # Temporary: go to landing for now
         if user.role == "merchant":
             return redirect("merchant_dashboard")
         return redirect("shopper_dashboard")
 
     return render(request, "accounts/login.html", {"role": role})
-
 
 
 def logout_view(request):
@@ -35,3 +36,39 @@ def logout_view(request):
     return redirect("landing")
 
 
+def register_choice(request):
+    return render(request, "accounts/register_choice.html")
+
+
+def register_shopper(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            role="shopper"
+        )
+
+        login(request, user)
+        return redirect("shopper_dashboard")
+
+    return render(request, "accounts/register_shopper.html")
+
+
+def register_merchant(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            role="merchant"
+        )
+
+        login(request, user)
+        return redirect("merchant_dashboard")
+
+    return render(request, "accounts/register_merchant.html")
