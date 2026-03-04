@@ -28,7 +28,10 @@ def login_view(request):
     return render(request, "accounts/login.html", {"role": role})
 
 
+
 def logout_view(request):
     logout(request)
     messages.info(request, "Logged out.")
     return redirect("landing")
+
+
