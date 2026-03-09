@@ -1,6 +1,46 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %}Shopper Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+{% endblock %}
+
 {% block content %}
-  <h1>Shopper Dashboard (placeholder)</h1>
-  <p>Logged in as: {{ request.user.username }} ({{ request.user.role }})</p>
+<main class="dashboard-shell">
+  <section class="dashboard-hero">
+    <p class="dashboard-eyebrow">Shopper Dashboard</p>
+    <h1>Welcome back, {{ request.user.email }}</h1>
+    <p>
+      Browse products, track orders, save favourites, and manage your account from one place.
+    </p>
+  </section>
+
+  <section class="dashboard-grid" aria-label="Shopper dashboard actions">
+    <article class="dashboard-card">
+      <h2>Browse Products</h2>
+      <p>Discover the latest styles, trending drops, and local fashion collections.</p>
+      <a class="button button--primary" href="#">Browse Now</a>
+    </article>
+
+    <article class="dashboard-card">
+      <h2>My Orders</h2>
+      <p>Track live deliveries, review completed purchases, and manage order history.</p>
+      <a class="button button--primary" href="{% url 'shopper_orders' %}">View Orders</a>
+    </article>
+
+    <article class="dashboard-card">
+      <h2>Saved Items</h2>
+      <p>Keep your favourite products in one place and come back to them anytime.</p>
+      <a class="button button--primary" href="#">View Saved</a>
+    </article>
+
+    <article class="dashboard-card">
+      <h2>Account</h2>
+      <p>Manage your profile details, addresses, and preferences.</p>
+      <a class="button button--primary" href="#">Manage Account</a>
+    </article>
+  </section>
+</main>
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from core.views import landing, choose_role, shopper_dashboard, merchant_dashboard
+from core.views import landing, choose_role, shopper_dashboard, merchant_dashboard, shopper_orders
 from accounts.views import login_view, logout_view, register_choice, register_shopper, register_merchant
 
 urlpatterns = [
@@ -16,4 +16,5 @@ urlpatterns = [
 
     path("shopper/dashboard/", shopper_dashboard, name="shopper_dashboard"),
     path("merchant/dashboard/", merchant_dashboard, name="merchant_dashboard"),
+    path('shopper/orders/', shopper_orders, name='shopper_orders'),
 ]

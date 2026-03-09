@@ -21,3 +21,10 @@ def landing(request):
 
 def choose_role(request):
     return render(request, "pages/choose_role.html")
+
+@login_required
+def shopper_orders(request):
+    if request.user.role != "shopper":
+        messages.error(request, "Access denied.")
+        return redirect("landing")
+    return render(request, "shopper/orders.html")
