@@ -15,3 +15,9 @@ def merchant_dashboard(request):
         messages.error(request, "Access denied.")
         return redirect("landing")
     return render(request, "merchant/dashboard.html")
+
+def landing(request):
+    return render(request, "core/landing_page.html")
+
+def choose_role(request):
+    return render(request, "pages/choose_role.html")

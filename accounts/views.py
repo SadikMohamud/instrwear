@@ -99,3 +99,9 @@ def register_merchant(request):
         return redirect("merchant_dashboard")
 
     return render(request, "accounts/register_merchant.html")
+
+def access_choice(request, role):
+    role = role.lower()
+    if role not in ["shopper", "merchant"]:
+        role = "shopper"
+    return render(request, "accounts/access_choice.html", {"role": role})

@@ -1,7 +1,17 @@
 {% extends "base.html" %}
-{% block title %}Login{% endblock %}
+{% block title %}
+  {% if role == "merchant" %}Merchant Login{% else %}Shopper Login{% endif %}
+{% endblock %}
+
 {% block content %}
-  <h1>InstrWear Login (placeholder)</h1>
+  <h1>
+    {% if role == "merchant" %}
+      Merchant Login
+    {% else %}
+      Shopper Login
+    {% endif %}
+  </h1>
+
   <p>Role intent: <strong>{{ role }}</strong></p>
 
   <form method="post">
@@ -9,17 +19,29 @@
     <input type="hidden" name="role" value="{{ role }}">
 
     <p>
-      <label>Username</label><br>
-      <input name="email" required>
+      <label for="email">Email</label><br>
+      <input id="email" name="email" type="email" required>
     </p>
 
     <p>
-      <label>Password</label><br>
-      <input type="password" name="password" required>
+      <label for="password">Password</label><br>
+      <input id="password" name="password" type="password" required>
     </p>
 
-    <button type="submit">Login</button>
+    <button type="submit">
+      {% if role == "merchant" %}Login as Merchant{% else %}Login as Shopper{% endif %}
+    </button>
   </form>
 
-  <p><a href="/accounts/logout/">Logout</a></p>
+  <hr>
+
+  {% if role == "merchant" %}
+    <p>Don’t have a merchant account?</p>
+    <p><a href="{% url 'register_merchant' %}">Create merchant account</a></p>
+  {% else %}
+    <p>Don’t have a shopper account?</p>
+    <p><a href="{% url 'register_shopper' %}">Create shopper account</a></p>
+  {% endif %}
+
+  <p><a href="{% url 'choose_role' %}">Back to role selection</a></p>
 {% endblock %}

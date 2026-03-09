@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Choose Your Role</title>
+</head>
+
+<body>
+
+<h1>How would you like to use InstrWear?</h1>
+
+<div>
+
+  <h2>Shopper</h2>
+  <p>Browse clothes and get them delivered fast.</p>
+
+  <a href="{% url 'login' %}?role=shopper">Login</a>
+  <a href="{% url 'register_shopper' %}">Sign Up</a>
+
+</div>
+
+<br>
+
+<div>
+
+  <h2>Merchant</h2>
+  <p>Sell your products to local customers.</p>
+
+  <a href="{% url 'login' %}?role=merchant">Login</a>
+  <a href="{% url 'register_merchant' %}">Sign Up</a>
+
+</div>
+
+</body>
+</html>
