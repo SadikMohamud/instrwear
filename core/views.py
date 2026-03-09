@@ -17,7 +17,7 @@ def merchant_dashboard(request):
     return render(request, "merchant/dashboard.html")
 
 def landing(request):
-    return render(request, "core/landing_page.html")
+    return render(request, "pages/landing.html")
 
 def choose_role(request):
     return render(request, "pages/choose_role.html")
