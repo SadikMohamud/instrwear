@@ -1,47 +1,56 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %}
   {% if role == "merchant" %}Merchant Login{% else %}Shopper Login{% endif %}
 {% endblock %}
 
+
 {% block content %}
-  <h1>
-    {% if role == "merchant" %}
-      Merchant Login
-    {% else %}
-      Shopper Login
-    {% endif %}
-  </h1>
+<main class="iw-auth-page">
+  <section class="iw-auth-panel">
+    <header class="iw-auth-header">
+      <h1 class="iw-auth-title">
+        {% if role == "merchant" %}Merchant Login{% else %}Shopper Login{% endif %}
+      </h1>
+      <p class="iw-auth-subtitle">
+        {% if role == "merchant" %}
+          Sign in to manage your store and products.
+        {% else %}
+          Sign in to continue shopping on InstrWear.
+        {% endif %}
+      </p>
+    </header>
 
-  <p>Role intent: <strong>{{ role }}</strong></p>
+    <form method="post" class="iw-auth-form">
+      {% csrf_token %}
+      <input type="hidden" name="role" value="{{ role }}">
 
-  <form method="post">
-    {% csrf_token %}
-    <input type="hidden" name="role" value="{{ role }}">
+      <div class="iw-field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required>
+      </div>
 
-    <p>
-      <label for="email">Email</label><br>
-      <input id="email" name="email" type="email" required>
-    </p>
+      <div class="iw-field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required>
+      </div>
 
-    <p>
-      <label for="password">Password</label><br>
-      <input id="password" name="password" type="password" required>
-    </p>
+      <div class="iw-auth-actions">
+        <button class="button button--primary" type="submit">
+          {% if role == "merchant" %}Login as Merchant{% else %}Login as Shopper{% endif %}
+        </button>
+      </div>
+    </form>
 
-    <button type="submit">
-      {% if role == "merchant" %}Login as Merchant{% else %}Login as Shopper{% endif %}
-    </button>
-  </form>
-
-  <hr>
-
-  {% if role == "merchant" %}
-    <p>Don’t have a merchant account?</p>
-    <p><a href="{% url 'register_merchant' %}">Create merchant account</a></p>
-  {% else %}
-    <p>Don’t have a shopper account?</p>
-    <p><a href="{% url 'register_shopper' %}">Create shopper account</a></p>
-  {% endif %}
-
-  <p><a href="{% url 'choose_role' %}">Back to role selection</a></p>
+    <footer class="iw-auth-footer">
+      {% if role == "merchant" %}
+        <p>Don’t have a merchant account? <a href="{% url 'register_merchant' %}">Create one</a></p>
+      {% else %}
+        <p>Don’t have a shopper account? <a href="{% url 'register_shopper' %}">Create one</a></p>
+      {% endif %}
+      <p><a href="{% url 'choose_role' %}">← Back to role selection</a></p>
+    </footer>
+  </section>
+</main>
 {% endblock %}

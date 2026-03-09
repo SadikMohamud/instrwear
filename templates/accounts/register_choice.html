@@ -1,10 +1,31 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}Create an Account{% endblock %}
+
+
 
 {% block content %}
-<h1>Create an account</h1>
+<main class="iw-auth-page">
+  <section class="iw-auth-panel iw-auth-panel--wide">
+    <header class="iw-auth-header">
+      <h1 class="iw-auth-title">Create an account</h1>
+      <p class="iw-auth-subtitle">Choose how you want to use InstrWear.</p>
+    </header>
 
-<a href="/accounts/register/shopper/">Register as Shopper</a>
-<br><br>
-<a href="/accounts/register/merchant/">Register as Merchant</a>
+    <section class="iw-role-grid">
+      <article class="iw-role-card">
+        <h2>Shopper</h2>
+        <p>Browse fashion, discover local brands, and get your fit delivered fast.</p>
+        <a class="button button--primary" href="{% url 'register_shopper' %}">Register as Shopper</a>
+      </article>
 
+      <article class="iw-role-card">
+        <h2>Merchant</h2>
+        <p>Open your storefront, upload products, and start selling.</p>
+        <a class="button button--primary" href="{% url 'register_merchant' %}">Register as Merchant</a>
+      </article>
+    </section>
+  </section>
+</main>
 {% endblock %}

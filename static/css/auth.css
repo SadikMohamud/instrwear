@@ -1,0 +1,145 @@
+.iw-auth-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 48px 20px;
+  background: transparent;
+}
+
+.iw-auth-panel {
+  width: min(100%, 560px);
+  padding: 36px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+}
+
+.iw-auth-panel--wide {
+  width: min(100%, 920px);
+}
+
+.iw-auth-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.iw-auth-title {
+  margin: 0 0 12px;
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: #ffffff;
+}
+
+.iw-auth-subtitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.iw-auth-form {
+  display: grid;
+  gap: 20px;
+}
+
+.iw-field {
+  display: grid;
+  gap: 8px;
+}
+
+.iw-field label {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.iw-field input,
+.iw-field select,
+.iw-field textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  font: inherit;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.iw-field input:focus,
+.iw-field select:focus,
+.iw-field textarea:focus {
+  border-color: rgba(255, 87, 34, 0.6);
+  box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.iw-field input::placeholder,
+.iw-field textarea::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.iw-auth-actions {
+  margin-top: 4px;
+}
+
+.iw-auth-footer {
+  margin-top: 24px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.75;
+}
+
+.iw-auth-footer a {
+  color: #ff8a50;
+  text-decoration: none;
+}
+
+.iw-auth-footer a:hover,
+.iw-auth-footer a:focus-visible {
+  color: #ff5722;
+}
+
+.iw-role-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.iw-role-card {
+  padding: 24px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.iw-role-card h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+  color: #ffffff;
+}
+
+.iw-role-card p {
+  margin: 0 0 18px;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.75;
+}
+
+.iw-role-card .button {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .iw-auth-panel {
+    padding: 24px;
+  }
+
+  .iw-role-grid {
+    grid-template-columns: 1fr;
+  }
+}

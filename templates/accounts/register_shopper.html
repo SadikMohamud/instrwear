@@ -1,18 +1,40 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}Register as Shopper{% endblock %}
+
+
 
 {% block content %}
-<h1>Register as Shopper</h1>
+<main class="iw-auth-page">
+  <section class="iw-auth-panel">
+    <header class="iw-auth-header">
+      <h1 class="iw-auth-title">Register as Shopper</h1>
+      <p class="iw-auth-subtitle">Create your shopper account and start discovering fashion.</p>
+    </header>
 
-<form method="post">
-{% csrf_token %}
+    <form method="post" class="iw-auth-form">
+      {% csrf_token %}
 
-<label>Username</label>
-<input name="email" required>
+      <div class="iw-field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required>
+      </div>
 
-<label>Password</label>
-<input type="password" name="password" required>
+      <div class="iw-field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required>
+      </div>
 
-<button type="submit">Create Shopper Account</button>
+      <div class="iw-auth-actions">
+        <button class="button button--primary" type="submit">Create Shopper Account</button>
+      </div>
+    </form>
 
-</form>
+    <footer class="iw-auth-footer">
+      <p>Already have a shopper account? <a href="{% url 'login' %}?role=shopper">Login here</a></p>
+      <p><a href="{% url 'register_choice' %}">← Back to account choices</a></p>
+    </footer>
+  </section>
+</main>
 {% endblock %}
