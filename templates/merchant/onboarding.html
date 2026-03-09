@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Set Up Your Store{% endblock %}
+
+{% block content %}
+<main class="iw-auth-page">
+
+<section class="iw-auth-panel iw-auth-panel--wide">
+
+<header class="iw-auth-header">
+<h1 class="iw-auth-title">Set Up Your Store</h1>
+<p class="iw-auth-subtitle">
+Tell us about your business so customers can discover your store.
+</p>
+</header>
+
+<form method="post" class="iw-auth-form">
+{% csrf_token %}
+
+<h2 class="iw-form-section">Business Information</h2>
+
+<div class="iw-field">
+<label for="store_name">Store name</label>
+<input id="store_name" name="store_name" required>
+</div>
+
+<div class="iw-field">
+<label for="business_phone">Business phone number</label>
+<input id="business_phone" name="business_phone" placeholder="+44 7XXX XXX XXX">
+</div>
+
+<div class="iw-field">
+<label for="store_description">Store description</label>
+<textarea id="store_description" name="store_description"></textarea>
+</div>
+
+<h2 class="iw-form-section">Store Address</h2>
+
+<div class="iw-field">
+<label for="store_address1">Address line 1</label>
+<input id="store_address1" name="store_address1" required>
+</div>
+
+<div class="iw-field">
+<label for="store_address2">Address line 2</label>
+<input id="store_address2" name="store_address2">
+</div>
+
+<div class="iw-form-row">
+
+<div class="iw-field">
+<label for="store_city">Town / City</label>
+<input id="store_city" name="store_city" required>
+</div>
+
+<div class="iw-field">
+<label for="store_postcode">Postcode</label>
+<input id="store_postcode" name="store_postcode" placeholder="SW1A 1AA" required>
+</div>
+
+</div>
+
+<h2 class="iw-form-section">Business Settings</h2>
+
+<div class="iw-form-row">
+
+<div class="iw-field">
+<label for="delivery_radius">Delivery radius (km)</label>
+<input id="delivery_radius" name="delivery_radius" type="number" value="5">
+</div>
+
+<div class="iw-field">
+<label for="store_category">Store category</label>
+<select id="store_category" name="store_category">
+<option>Streetwear</option>
+<option>Luxury</option>
+<option>Vintage</option>
+<option>Footwear</option>
+<option>Accessories</option>
+</select>
+</div>
+
+</div>
+
+<div class="iw-auth-actions">
+<button class="button button--primary" type="submit">
+Finish Setup
+</button>
+</div>
+
+</form>
+
+</section>
+
+</main>
+{% endblock %}

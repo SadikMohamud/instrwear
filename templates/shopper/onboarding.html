@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Complete Your Profile{% endblock %}
+
+{% block content %}
+<main class="iw-auth-page">
+
+<section class="iw-auth-panel iw-auth-panel--wide">
+
+<header class="iw-auth-header">
+<h1 class="iw-auth-title">Complete Your Shopper Profile</h1>
+<p class="iw-auth-subtitle">
+Set up your delivery details so you can start ordering instantly.
+</p>
+</header>
+
+<form method="post" class="iw-auth-form">
+{% csrf_token %}
+
+<h2 class="iw-form-section">Personal Details</h2>
+
+<div class="iw-form-row">
+
+<div class="iw-field">
+<label for="first_name">First name</label>
+<input id="first_name" name="first_name" required>
+</div>
+
+<div class="iw-field">
+<label for="last_name">Last name</label>
+<input id="last_name" name="last_name" required>
+</div>
+
+</div>
+
+<div class="iw-field">
+<label for="phone">Mobile number</label>
+<input id="phone" name="phone" placeholder="+44 7XXX XXX XXX">
+</div>
+
+<h2 class="iw-form-section">Delivery Address</h2>
+
+<div class="iw-field">
+<label for="address_line1">Address line 1</label>
+<input id="address_line1" name="address_line1" required>
+</div>
+
+<div class="iw-field">
+<label for="address_line2">Address line 2</label>
+<input id="address_line2" name="address_line2">
+</div>
+
+<div class="iw-form-row">
+
+<div class="iw-field">
+<label for="city">Town / City</label>
+<input id="city" name="city" required>
+</div>
+
+<div class="iw-field">
+<label for="postcode">Postcode</label>
+<input id="postcode" name="postcode" placeholder="SW1A 1AA" required>
+</div>
+
+</div>
+
+<div class="iw-field">
+<label for="delivery_notes">Delivery notes (optional)</label>
+<textarea id="delivery_notes" name="delivery_notes"></textarea>
+</div>
+
+<div class="iw-auth-actions">
+<button class="button button--primary" type="submit">
+Continue to Dashboard
+</button>
+</div>
+
+</form>
+
+</section>
+
+</main>
+{% endblock %}

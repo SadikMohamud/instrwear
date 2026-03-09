@@ -73,7 +73,7 @@ def register_shopper(request):
         send_welcome_email(user.email, request)
         login(request, user)
         messages.success(request, "Welcome to InstrWear! Check your email.")
-        return redirect("shopper_dashboard")
+        return redirect("shopper_onboarding")
 
     return render(request, "accounts/register_shopper.html")
 
@@ -96,7 +96,7 @@ def register_merchant(request):
         send_welcome_email(user.email, request)
         login(request, user)
         messages.success(request, "Welcome to InstrWear! Check your email.")
-        return redirect("merchant_dashboard")
+        return redirect("merchant_onboarding")
 
     return render(request, "accounts/register_merchant.html")
 
