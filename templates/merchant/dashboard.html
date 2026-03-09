@@ -1,6 +1,267 @@
 {% extends "base.html" %}
-{% block title %}Merchant Dashboard{% endblock %}
+{% load static %}
+
+{% block title %}InstrWear - Merchant Inventory{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/merchant_dashboard.css' %}" />
+{% endblock %}
+
 {% block content %}
-  <h1>Merchant Dashboard (placeholder)</h1>
-  <p>Logged in as: {{ request.user.username }} ({{ request.user.role }})</p>
+<aside class="merchant-sidebar">
+  <a href="{% url 'landing' %}" class="merchant-logo">InstrWear</a>
+  <p class="merchant-store-name">Urban Style Boutique</p>
+
+  <button class="merchant-store-status" type="button">
+    <span class="merchant-status-dot"></span>
+    <span class="merchant-status-text">Store Open</span>
+  </button>
+
+  <nav aria-label="Merchant navigation">
+    <ul class="merchant-nav-menu">
+      <li class="merchant-nav-item">
+        <a href="{% url 'merchant_dashboard' %}" class="merchant-nav-link active">
+          <span class="merchant-nav-icon">📊</span>
+          <span class="merchant-nav-label">Dashboard</span>
+        </a>
+      </li>
+      <li class="merchant-nav-item">
+        <a href="#" class="merchant-nav-link">
+          <span class="merchant-nav-icon">📦</span>
+          <span class="merchant-nav-label">Orders</span>
+        </a>
+      </li>
+      <li class="merchant-nav-item">
+        <a href="#" class="merchant-nav-link">
+          <span class="merchant-nav-icon">👕</span>
+          <span class="merchant-nav-label">Inventory</span>
+        </a>
+      </li>
+      <li class="merchant-nav-item">
+        <a href="#" class="merchant-nav-link">
+          <span class="merchant-nav-icon">📈</span>
+          <span class="merchant-nav-label">Analytics</span>
+        </a>
+      </li>
+      <li class="merchant-nav-item">
+        <a href="#" class="merchant-nav-link">
+          <span class="merchant-nav-icon">💰</span>
+          <span class="merchant-nav-label">Earnings</span>
+        </a>
+      </li>
+      <li class="merchant-nav-item">
+        <a href="#" class="merchant-nav-link">
+          <span class="merchant-nav-icon">⭐</span>
+          <span class="merchant-nav-label">Reviews</span>
+        </a>
+      </li>
+      <li class="merchant-nav-item">
+        <a href="{% url 'logout' %}" class="merchant-nav-link">
+          <span class="merchant-nav-icon">↩</span>
+          <span class="merchant-nav-label">Logout</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>
+
+<main class="merchant-main-content">
+  <header class="merchant-page-header">
+    <h1 class="merchant-header-title">Inventory</h1>
+    <div class="merchant-header-actions">
+      <button class="merchant-btn merchant-btn-secondary" type="button">Export CSV</button>
+      <button class="merchant-btn merchant-btn-primary" type="button" onclick="openMerchantModal()">+ Add Product</button>
+    </div>
+  </header>
+
+  <section class="merchant-stats-row" aria-label="Inventory summary">
+    <article class="merchant-stat-card">
+      <div class="merchant-stat-icon">📦</div>
+      <p class="merchant-stat-label">Total Products</p>
+      <p class="merchant-stat-value">247</p>
+    </article>
+
+    <article class="merchant-stat-card">
+      <div class="merchant-stat-icon">✅</div>
+      <p class="merchant-stat-label">Active Listings</p>
+      <p class="merchant-stat-value">198</p>
+    </article>
+
+    <article class="merchant-stat-card">
+      <div class="merchant-stat-icon">⚠️</div>
+      <p class="merchant-stat-label">Low Stock</p>
+      <p class="merchant-stat-value">12</p>
+    </article>
+
+    <article class="merchant-stat-card">
+      <div class="merchant-stat-icon">💰</div>
+      <p class="merchant-stat-label">Inventory Value</p>
+      <p class="merchant-stat-value">$24.5K</p>
+    </article>
+  </section>
+
+  <section class="merchant-controls" aria-label="Inventory controls">
+    <div class="merchant-search-box">
+      <span class="merchant-search-icon">🔍</span>
+      <input type="text" class="merchant-search-input" placeholder="Search products...">
+    </div>
+
+    <button class="merchant-filter-btn" type="button">
+      <span>⚙️</span>
+      <span>Filters</span>
+    </button>
+
+    <button class="merchant-filter-btn" type="button">
+      <span>↓</span>
+      <span>Sort</span>
+    </button>
+  </section>
+
+  <section class="merchant-products-table" aria-label="Inventory products">
+    <header class="merchant-table-header">
+      <div>Image</div>
+      <div>Product</div>
+      <div>Price</div>
+      <div>Stock</div>
+      <div>Sold</div>
+      <div>Status</div>
+      <div>Actions</div>
+    </header>
+
+    <article class="merchant-product-row">
+      <div class="merchant-product-img">👕</div>
+      <div class="merchant-product-info">
+        <h2 class="merchant-product-name">Nike Tech Fleece Hoodie</h2>
+        <p class="merchant-product-category">Men's Clothing</p>
+      </div>
+      <div class="merchant-product-price">$89.99</div>
+      <div class="merchant-product-stock merchant-stock-high">45</div>
+      <div class="merchant-product-muted">127</div>
+      <div><span class="merchant-product-status merchant-status-active">Active</span></div>
+      <div class="merchant-product-actions">
+        <button class="merchant-icon-action" type="button">✏️</button>
+        <button class="merchant-icon-action" type="button">📊</button>
+        <button class="merchant-icon-action" type="button">🗑️</button>
+      </div>
+    </article>
+
+    <article class="merchant-product-row">
+      <div class="merchant-product-img">👖</div>
+      <div class="merchant-product-info">
+        <h2 class="merchant-product-name">Levi's 501 Original Jeans</h2>
+        <p class="merchant-product-category">Men's Clothing</p>
+      </div>
+      <div class="merchant-product-price">$98.00</div>
+      <div class="merchant-product-stock merchant-stock-medium">18</div>
+      <div class="merchant-product-muted">89</div>
+      <div><span class="merchant-product-status merchant-status-active">Active</span></div>
+      <div class="merchant-product-actions">
+        <button class="merchant-icon-action" type="button">✏️</button>
+        <button class="merchant-icon-action" type="button">📊</button>
+        <button class="merchant-icon-action" type="button">🗑️</button>
+      </div>
+    </article>
+
+    <article class="merchant-product-row">
+      <div class="merchant-product-img">👗</div>
+      <div class="merchant-product-info">
+        <h2 class="merchant-product-name">Zara Midi Wrap Dress</h2>
+        <p class="merchant-product-category">Women's Clothing</p>
+      </div>
+      <div class="merchant-product-price">$49.99</div>
+      <div class="merchant-product-stock merchant-stock-low">6</div>
+      <div class="merchant-product-muted">34</div>
+      <div><span class="merchant-product-status merchant-status-active">Active</span></div>
+      <div class="merchant-product-actions">
+        <button class="merchant-icon-action" type="button">✏️</button>
+        <button class="merchant-icon-action" type="button">📊</button>
+        <button class="merchant-icon-action" type="button">🗑️</button>
+      </div>
+    </article>
+
+    <article class="merchant-product-row">
+      <div class="merchant-product-img">👟</div>
+      <div class="merchant-product-info">
+        <h2 class="merchant-product-name">Adidas Ultraboost 23</h2>
+        <p class="merchant-product-category">Footwear</p>
+      </div>
+      <div class="merchant-product-price">$180.00</div>
+      <div class="merchant-product-stock merchant-stock-high">32</div>
+      <div class="merchant-product-muted">156</div>
+      <div><span class="merchant-product-status merchant-status-active">Active</span></div>
+      <div class="merchant-product-actions">
+        <button class="merchant-icon-action" type="button">✏️</button>
+        <button class="merchant-icon-action" type="button">📊</button>
+        <button class="merchant-icon-action" type="button">🗑️</button>
+      </div>
+    </article>
+  </section>
+</main>
+
+<section class="merchant-modal" id="merchantAddProductModal" aria-hidden="true">
+  <div class="merchant-modal-content">
+    <header class="merchant-modal-header">
+      <h2 class="merchant-modal-title">Add New Product</h2>
+    </header>
+
+    <form>
+      <div class="merchant-form-group">
+        <label class="merchant-form-label" for="product_name">Product Name</label>
+        <input id="product_name" type="text" class="merchant-form-input" placeholder="Nike Air Max 90">
+      </div>
+
+      <div class="merchant-form-group">
+        <label class="merchant-form-label" for="product_description">Description</label>
+        <textarea id="product_description" class="merchant-form-input" placeholder="Product description..."></textarea>
+      </div>
+
+      <div class="merchant-form-row">
+        <div class="merchant-form-group">
+          <label class="merchant-form-label" for="product_category">Category</label>
+          <select id="product_category" class="merchant-form-input">
+            <option>Men's Clothing</option>
+            <option>Women's Clothing</option>
+            <option>Footwear</option>
+            <option>Accessories</option>
+            <option>Outerwear</option>
+          </select>
+        </div>
+
+        <div class="merchant-form-group">
+          <label class="merchant-form-label" for="product_price">Price</label>
+          <input id="product_price" type="number" class="merchant-form-input" placeholder="99.99">
+        </div>
+      </div>
+
+      <div class="merchant-form-row">
+        <div class="merchant-form-group">
+          <label class="merchant-form-label" for="product_stock">Stock Quantity</label>
+          <input id="product_stock" type="number" class="merchant-form-input" placeholder="50">
+        </div>
+
+        <div class="merchant-form-group">
+          <label class="merchant-form-label" for="product_status">Status</label>
+          <select id="product_status" class="merchant-form-input">
+            <option>Active</option>
+            <option>Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="merchant-form-group">
+        <label class="merchant-form-label" for="product_images">Product Images</label>
+        <input id="product_images" type="file" class="merchant-form-input" multiple accept="image/*">
+      </div>
+
+      <div class="merchant-modal-actions">
+        <button type="button" class="merchant-btn merchant-btn-secondary" onclick="closeMerchantModal()">Cancel</button>
+        <button type="submit" class="merchant-btn merchant-btn-primary">Add Product</button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/merchant_dashboard.js' %}"></script>
 {% endblock %}
