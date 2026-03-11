@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block content %}
+<main class="iw-auth-page">
+  <section class="iw-auth-panel iw-auth-panel--wide">
+
+    <header class="iw-auth-header">
+      <h1 class="iw-auth-title">Add Product</h1>
+      <p class="iw-auth-subtitle">
+        Create a new product listing for your InstrWear store.
+      </p>
+    </header>
+
+    <form method="post" enctype="multipart/form-data" class="iw-auth-form">
+      {% csrf_token %}
+
+      <!-- Category field -->
+      <div class="iw-field">
+        <label for="{{ form.category.id_for_label }}">Category</label>
+        {{ form.category }}
+      </div>
+
+      <!-- Product name -->
+      <div class="iw-field">
+        <label for="{{ form.name.id_for_label }}">Product name</label>
+        {{ form.name }}
+      </div>
+
+      <!-- Product description -->
+      <div class="iw-field">
+        <label for="{{ form.description.id_for_label }}">Description</label>
+        {{ form.description }}
+      </div>
+
+      <!-- Price and stock row -->
+      <div class="iw-form-row">
+        <div class="iw-field">
+          <label for="{{ form.price.id_for_label }}">Price</label>
+          {{ form.price }}
+        </div>
+
+        <div class="iw-field">
+          <label for="{{ form.stock.id_for_label }}">Stock</label>
+          {{ form.stock }}
+        </div>
+      </div>
+
+      <!-- Image upload -->
+      <div class="iw-field">
+        <label for="{{ form.image.id_for_label }}">Product image</label>
+        {{ form.image }}
+      </div>
+
+      <!-- Active toggle -->
+      <div class="iw-field">
+        <label for="{{ form.is_active.id_for_label }}">Active listing</label>
+        {{ form.is_active }}
+      </div>
+
+      <!-- Submit button -->
+      <div class="iw-auth-actions">
+        <button class="button button--primary" type="submit">
+          Save Product
+        </button>
+      </div>
+    </form>
+
+  </section>
+</main>
+{% endblock %}
+
+<!--
+Author: Sadik Mohamud
+Project: InstrWear
+File: templates/merchant/add_product.html
+Purpose: Merchant product creation page
+-->

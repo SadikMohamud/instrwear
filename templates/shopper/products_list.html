@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Shop Products{% endblock %}
+
+{% block content %}
+<main class="dashboard-shell">
+
+  <section class="dashboard-hero">
+    <p class="dashboard-eyebrow">Marketplace</p>
+    <h1>Welcome {{ request.user.first_name }} to InstrWear</h1>
+    <p>Browse the latest products from merchants on the platform.</p>
+  </section>
+
+  <section class="dashboard-grid" aria-label="Available products">
+    {% for product in products %}
+      <article class="dashboard-card">
+        <h2>{{ product.name }}</h2>
+        <p>{{ product.description|default:"No description available." }}</p>
+        <p><strong>£{{ product.price }}</strong></p>
+        <p>Stock: {{ product.stock }}</p>
+      </article>
+    {% empty %}
+      <article class="dashboard-card">
+        <h2>No products yet</h2>
+        <p>There are no active products available right now.</p>
+      </article>
+    {% endfor %}
+  </section>
+
+</main>
+{% endblock %}
+
+<!--
+Author: Sadik Mohamud
+Project: InstrWear
+File: templates/shopper/product_list.html
+Purpose: Shopper marketplace product listing page
+-->

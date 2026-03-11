@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Products{% endblock %}
+
+{% block content %}
+<main class="dashboard-shell">
+
+  <section class="dashboard-hero">
+    <p class="dashboard-eyebrow">Merchant Products</p>
+    <h1>Welcome {{ request.user.first_name }} to InstrWear</h1>
+    <p>Manage your inventory, stock levels, and active listings.</p>
+  </section>
+
+  <section class="dashboard-grid" aria-label="Inventory summary">
+    <article class="dashboard-card">
+      <h2>Total Products</h2>
+      <p>{{ total_products }}</p>
+    </article>
+
+    <article class="dashboard-card">
+      <h2>Active Listings</h2>
+      <p>{{ active_products }}</p>
+    </article>
+
+    <article class="dashboard-card">
+      <h2>Low Stock</h2>
+      <p>{{ low_stock_products }}</p>
+    </article>
+
+    <article class="dashboard-card">
+      <h2>Inventory Value</h2>
+      <p>£{{ inventory_value }}</p>
+    </article>
+  </section>
+
+  <section class="dashboard-card" style="margin-top: 20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h2>Your Products</h2>
+      <a class="button button--primary" href="{% url 'merchant_add_product' %}">Add Product</a>
+    </div>
+
+    {% if products %}
+      <div style="display:grid; gap:16px;">
+        {% for product in products %}
+          <article style="padding:16px; border:1px solid rgba(255,255,255,0.08); border-radius:16px; background:rgba(255,255,255,0.02);">
+            <h3 style="margin-bottom:8px;">{{ product.name }}</h3>
+            <p style="margin-bottom:8px; color:rgba(255,255,255,0.7);">{{ product.description|default:"No description yet." }}</p>
+            <p style="margin-bottom:6px;">Price: £{{ product.price }}</p>
+            <p style="margin-bottom:6px;">Stock: {{ product.stock }}</p>
+            <p style="margin-bottom:0;">
+              Status:
+              {% if product.is_active %}
+                Active
+              {% else %}
+                Inactive
+              {% endif %}
+            </p>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>You have not added any products yet.</p>
+    {% endif %}
+  </section>
+
+</main>
+{% endblock %}
+
+<!--
+Author: Sadik Mohamud
+Project: InstrWear
+File: templates/merchant/products.html
+Purpose: Merchant inventory list page
+-->

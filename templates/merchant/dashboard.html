@@ -10,7 +10,9 @@
 {% block content %}
 <aside class="merchant-sidebar">
   <a href="{% url 'landing' %}" class="merchant-logo">InstrWear</a>
-  <p class="merchant-store-name">Urban Style Boutique</p>
+  <p class="merchant-store-name">
+    {{ merchant_profile.business_name|default:"Your Store" }}
+  </p>
 
   <button class="merchant-store-status" type="button">
     <span class="merchant-status-dot"></span>
@@ -32,7 +34,7 @@
         </a>
       </li>
       <li class="merchant-nav-item">
-        <a href="#" class="merchant-nav-link">
+        <a href="#" class="merchant-nav-link active">
           <span class="merchant-nav-icon">👕</span>
           <span class="merchant-nav-label">Inventory</span>
         </a>
@@ -67,7 +69,13 @@
 
 <main class="merchant-main-content">
   <header class="merchant-page-header">
-    <h1 class="merchant-header-title">Inventory</h1>
+    <div>
+      <h1 class="merchant-header-title">Welcome {{ request.user.first_name|default:"Merchant" }} to InstrWear</h1>
+      <p style="color: rgba(255,255,255,0.6); margin-top: 8px;">
+        Manage your inventory and keep your store growing.
+      </p>
+    </div>
+
     <div class="merchant-header-actions">
       <button class="merchant-btn merchant-btn-secondary" type="button">Export CSV</button>
       <button class="merchant-btn merchant-btn-primary" type="button" onclick="openMerchantModal()">+ Add Product</button>
@@ -78,25 +86,25 @@
     <article class="merchant-stat-card">
       <div class="merchant-stat-icon">📦</div>
       <p class="merchant-stat-label">Total Products</p>
-      <p class="merchant-stat-value">247</p>
+      <p class="merchant-stat-value">{{ total_products }}</p>
     </article>
 
     <article class="merchant-stat-card">
       <div class="merchant-stat-icon">✅</div>
       <p class="merchant-stat-label">Active Listings</p>
-      <p class="merchant-stat-value">198</p>
+      <p class="merchant-stat-value">{{ active_products }}</p>
     </article>
 
     <article class="merchant-stat-card">
       <div class="merchant-stat-icon">⚠️</div>
       <p class="merchant-stat-label">Low Stock</p>
-      <p class="merchant-stat-value">12</p>
+      <p class="merchant-stat-value">{{ low_stock_products }}</p>
     </article>
 
     <article class="merchant-stat-card">
       <div class="merchant-stat-icon">💰</div>
       <p class="merchant-stat-label">Inventory Value</p>
-      <p class="merchant-stat-value">$24.5K</p>
+      <p class="merchant-stat-value">£{{ inventory_value }}</p>
     </article>
   </section>
 
@@ -128,73 +136,60 @@
       <div>Actions</div>
     </header>
 
-    <article class="merchant-product-row">
-      <div class="merchant-product-img">👕</div>
-      <div class="merchant-product-info">
-        <h2 class="merchant-product-name">Nike Tech Fleece Hoodie</h2>
-        <p class="merchant-product-category">Men's Clothing</p>
-      </div>
-      <div class="merchant-product-price">$89.99</div>
-      <div class="merchant-product-stock merchant-stock-high">45</div>
-      <div class="merchant-product-muted">127</div>
-      <div><span class="merchant-product-status merchant-status-active">Active</span></div>
-      <div class="merchant-product-actions">
-        <button class="merchant-icon-action" type="button">✏️</button>
-        <button class="merchant-icon-action" type="button">📊</button>
-        <button class="merchant-icon-action" type="button">🗑️</button>
-      </div>
-    </article>
+    {% for product in products %}
+      <article class="merchant-product-row">
+        <div class="merchant-product-img">
+          {% if product.image %}
+            <img
+              src="{{ product.image.url }}"
+              alt="{{ product.name }}"
+              style="width: 60px; height: 60px; object-fit: cover; border-radius: 12px;"
+            >
+          {% else %}
+            👕
+          {% endif %}
+        </div>
 
-    <article class="merchant-product-row">
-      <div class="merchant-product-img">👖</div>
-      <div class="merchant-product-info">
-        <h2 class="merchant-product-name">Levi's 501 Original Jeans</h2>
-        <p class="merchant-product-category">Men's Clothing</p>
-      </div>
-      <div class="merchant-product-price">$98.00</div>
-      <div class="merchant-product-stock merchant-stock-medium">18</div>
-      <div class="merchant-product-muted">89</div>
-      <div><span class="merchant-product-status merchant-status-active">Active</span></div>
-      <div class="merchant-product-actions">
-        <button class="merchant-icon-action" type="button">✏️</button>
-        <button class="merchant-icon-action" type="button">📊</button>
-        <button class="merchant-icon-action" type="button">🗑️</button>
-      </div>
-    </article>
+        <div class="merchant-product-info">
+          <h2 class="merchant-product-name">{{ product.name }}</h2>
+          <p class="merchant-product-category">
+            {% if product.category %}
+              {{ product.category.name }}
+            {% else %}
+              Uncategorised
+            {% endif %}
+          </p>
+        </div>
 
-    <article class="merchant-product-row">
-      <div class="merchant-product-img">👗</div>
-      <div class="merchant-product-info">
-        <h2 class="merchant-product-name">Zara Midi Wrap Dress</h2>
-        <p class="merchant-product-category">Women's Clothing</p>
-      </div>
-      <div class="merchant-product-price">$49.99</div>
-      <div class="merchant-product-stock merchant-stock-low">6</div>
-      <div class="merchant-product-muted">34</div>
-      <div><span class="merchant-product-status merchant-status-active">Active</span></div>
-      <div class="merchant-product-actions">
-        <button class="merchant-icon-action" type="button">✏️</button>
-        <button class="merchant-icon-action" type="button">📊</button>
-        <button class="merchant-icon-action" type="button">🗑️</button>
-      </div>
-    </article>
+        <div class="merchant-product-price">£{{ product.price }}</div>
 
-    <article class="merchant-product-row">
-      <div class="merchant-product-img">👟</div>
-      <div class="merchant-product-info">
-        <h2 class="merchant-product-name">Adidas Ultraboost 23</h2>
-        <p class="merchant-product-category">Footwear</p>
-      </div>
-      <div class="merchant-product-price">$180.00</div>
-      <div class="merchant-product-stock merchant-stock-high">32</div>
-      <div class="merchant-product-muted">156</div>
-      <div><span class="merchant-product-status merchant-status-active">Active</span></div>
-      <div class="merchant-product-actions">
-        <button class="merchant-icon-action" type="button">✏️</button>
-        <button class="merchant-icon-action" type="button">📊</button>
-        <button class="merchant-icon-action" type="button">🗑️</button>
-      </div>
-    </article>
+        <div class="merchant-product-stock {% if product.stock < 10 %}merchant-stock-low{% elif product.stock < 20 %}merchant-stock-medium{% else %}merchant-stock-high{% endif %}">
+          {{ product.stock }}
+        </div>
+
+        <div class="merchant-product-muted">0</div>
+
+        <div>
+          {% if product.is_active %}
+            <span class="merchant-product-status merchant-status-active">Active</span>
+          {% else %}
+            <span class="merchant-product-status merchant-status-inactive">Inactive</span>
+          {% endif %}
+        </div>
+
+        <div class="merchant-product-actions">
+          <button class="merchant-icon-action" type="button">✏️</button>
+          <button class="merchant-icon-action" type="button">📊</button>
+          <button class="merchant-icon-action" type="button">🗑️</button>
+        </div>
+      </article>
+    {% empty %}
+      <article class="merchant-product-row">
+        <div style="grid-column: 1 / -1; color: rgba(255,255,255,0.7);">
+          You have not added any products yet.
+        </div>
+      </article>
+    {% endfor %}
   </section>
 </main>
 
@@ -204,53 +199,46 @@
       <h2 class="merchant-modal-title">Add New Product</h2>
     </header>
 
-    <form>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
       <div class="merchant-form-group">
-        <label class="merchant-form-label" for="product_name">Product Name</label>
-        <input id="product_name" type="text" class="merchant-form-input" placeholder="Nike Air Max 90">
+        <label class="merchant-form-label" for="{{ form.name.id_for_label }}">Product Name</label>
+        {{ form.name }}
       </div>
 
       <div class="merchant-form-group">
-        <label class="merchant-form-label" for="product_description">Description</label>
-        <textarea id="product_description" class="merchant-form-input" placeholder="Product description..."></textarea>
+        <label class="merchant-form-label" for="{{ form.description.id_for_label }}">Description</label>
+        {{ form.description }}
       </div>
 
       <div class="merchant-form-row">
         <div class="merchant-form-group">
-          <label class="merchant-form-label" for="product_category">Category</label>
-          <select id="product_category" class="merchant-form-input">
-            <option>Men's Clothing</option>
-            <option>Women's Clothing</option>
-            <option>Footwear</option>
-            <option>Accessories</option>
-            <option>Outerwear</option>
-          </select>
+          <label class="merchant-form-label" for="{{ form.category.id_for_label }}">Category</label>
+          {{ form.category }}
         </div>
 
         <div class="merchant-form-group">
-          <label class="merchant-form-label" for="product_price">Price</label>
-          <input id="product_price" type="number" class="merchant-form-input" placeholder="99.99">
+          <label class="merchant-form-label" for="{{ form.price.id_for_label }}">Price</label>
+          {{ form.price }}
         </div>
       </div>
 
       <div class="merchant-form-row">
         <div class="merchant-form-group">
-          <label class="merchant-form-label" for="product_stock">Stock Quantity</label>
-          <input id="product_stock" type="number" class="merchant-form-input" placeholder="50">
+          <label class="merchant-form-label" for="{{ form.stock.id_for_label }}">Stock Quantity</label>
+          {{ form.stock }}
         </div>
 
         <div class="merchant-form-group">
-          <label class="merchant-form-label" for="product_status">Status</label>
-          <select id="product_status" class="merchant-form-input">
-            <option>Active</option>
-            <option>Inactive</option>
-          </select>
+          <label class="merchant-form-label" for="{{ form.is_active.id_for_label }}">Status</label>
+          {{ form.is_active }}
         </div>
       </div>
 
       <div class="merchant-form-group">
-        <label class="merchant-form-label" for="product_images">Product Images</label>
-        <input id="product_images" type="file" class="merchant-form-input" multiple accept="image/*">
+        <label class="merchant-form-label" for="{{ form.image.id_for_label }}">Product Image</label>
+        {{ form.image }}
       </div>
 
       <div class="merchant-modal-actions">
@@ -265,3 +253,10 @@
 {% block extra_js %}
 <script src="{% static 'js/merchant_dashboard.js' %}"></script>
 {% endblock %}
+
+<!--
+Author: Sadik Mohamud
+Project: InstrWear
+File: templates/merchant/dashboard.html
+Purpose: Merchant inventory dashboard with inline product creation modal
+-->
