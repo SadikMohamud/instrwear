@@ -1,0 +1,213 @@
+{% load static %}
+<!--
+Author: Sadik Mohamud
+Project: InstrWear
+File: templates/shopper/checkout_success.html
+Purpose: Shopper checkout success template
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSTRWEAR - ORDER CONFIRMED!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #FFFDF5;
+            --fg: #000000;
+            --accent: #FF6B6B;
+            --secondary: #FFD93D;
+            --muted: #C4B5FD;
+            --white: #FFFFFF;
+            --success: #2ed573;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(#000 1.5px, transparent 1.5px);
+            background-size: 25px 25px;
+            opacity: 0.02;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .header {
+            background: var(--white);
+            border-bottom: 4px solid var(--fg);
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 0 0 #000;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .main {
+            flex: 1;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .success-banner {
+            background: var(--success);
+            border: 4px solid var(--fg);
+            padding: 40px;
+            text-align: center;
+            box-shadow: 12px 12px 0 0 #000;
+            margin-bottom: 40px;
+            width: 100%;
+            transform: rotate(-2deg);
+        }
+
+        .success-icon {
+            font-size: 100px;
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            font-size: 48px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: 15px;
+            color: var(--white);
+            text-shadow: 4px 4px 0 #000;
+        }
+
+        .success-subtitle {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--fg);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .order-details {
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 40px;
+            box-shadow: 8px 8px 0 0 #000;
+            width: 100%;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid var(--fg);
+        }
+
+        .detail-text {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.8;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 20px;
+            border: 4px solid var(--fg);
+            font-size: 16px;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-family: 'Space Grotesk', sans-serif;
+            box-shadow: 8px 8px 0 0 #000;
+            letter-spacing: 0.1em;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--fg);
+        }
+
+        @media (max-width: 768px) {
+            .main {
+                padding: 30px 20px;
+            }
+
+            .success-title {
+                font-size: 32px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">INSTRWEAR</div>
+    </header>
+
+    <main class="main">
+        <div class="success-banner">
+            <div class="success-icon">✅</div>
+            <div class="success-title">ORDER CONFIRMED!</div>
+            <div class="success-subtitle">Your payment was successful</div>
+        </div>
+
+        <div class="order-details">
+            <div class="section-title">WHAT HAPPENS NEXT</div>
+            <div class="detail-text">
+                Your order has been received and payment completed.<br>
+                You can now track everything from your shopper orders page.
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="{% url 'shopper_orders' %}" class="btn btn-primary">VIEW MY ORDERS</a>
+            <a href="{% url 'shopper_product_list' %}" class="btn btn-secondary">KEEP SHOPPING</a>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,415 @@
+{% load static %}
+<!--
+Author: Sadik Mohamud
+Project: InstrWear
+File: templates/shopper/checkout.html
+Purpose: Shopper checkout template
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSTRWEAR - CHECKOUT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #FFFDF5;
+            --fg: #000000;
+            --accent: #FF6B6B;
+            --secondary: #FFD93D;
+            --muted: #C4B5FD;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(#000 1.5px, transparent 1.5px);
+            background-size: 25px 25px;
+            opacity: 0.02;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .header {
+            background: var(--white);
+            border-bottom: 4px solid var(--fg);
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 0 0 #000;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .progress-steps {
+            background: var(--secondary);
+            border-bottom: 4px solid var(--fg);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            box-shadow: 0 4px 0 0 #000;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--white);
+            border: 4px solid var(--fg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 18px;
+            box-shadow: 4px 4px 0 0 #000;
+        }
+
+        .step.active .step-number {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        .step.completed .step-number {
+            background: #2ed573;
+            color: var(--white);
+        }
+
+        .step-label {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .checkout-section {
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 8px 8px 0 0 #000;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid var(--fg);
+        }
+
+        .form-group { margin-bottom: 22px; }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 10px;
+        }
+
+        .form-input {
+            width: 100%;
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 16px 20px;
+            font-size: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            box-shadow: 4px 4px 0 0 #000;
+        }
+
+        .form-input:focus {
+            outline: none;
+            background: var(--muted);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .error-list {
+            list-style: none;
+            margin-top: 8px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .error-list li {
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            background: #ffe3e3;
+            border: 3px solid var(--fg);
+            padding: 8px 10px;
+            box-shadow: 3px 3px 0 0 #000;
+        }
+
+        .order-summary {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        .summary-card {
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 30px;
+            box-shadow: 12px 12px 0 0 #000;
+            transform: rotate(1deg);
+        }
+
+        .summary-title {
+            font-size: 24px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid var(--fg);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            gap: 15px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .summary-total {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 4px solid var(--fg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-label {
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .total-value {
+            font-size: 42px;
+            font-weight: 900;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .place-order-btn {
+            width: 100%;
+            padding: 20px;
+            background: var(--accent);
+            border: 4px solid var(--fg);
+            color: var(--white);
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 25px;
+            font-family: 'Space Grotesk', sans-serif;
+            box-shadow: 8px 8px 0 0 #000;
+            letter-spacing: 0.1em;
+        }
+
+        @media (max-width: 900px) {
+            .main {
+                grid-template-columns: 1fr;
+            }
+
+            .order-summary {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main { padding: 20px; }
+            .progress-steps {
+                gap: 20px;
+                padding: 15px;
+            }
+            .step-label {
+                display: none;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">INSTRWEAR</div>
+    </header>
+
+    <div class="progress-steps">
+        <div class="step completed">
+            <div class="step-number">1</div>
+            <div class="step-label">Cart</div>
+        </div>
+        <div class="step active">
+            <div class="step-number">2</div>
+            <div class="step-label">Checkout</div>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-label">Payment</div>
+        </div>
+    </div>
+
+    <main class="main">
+        <div>
+            <div class="checkout-section">
+                <h2 class="section-title">DELIVERY DETAILS</h2>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="full_name" class="form-input" value="{{ form.full_name.value|default:'' }}" required>
+                        {% if form.full_name.errors %}
+                            <ul class="error-list">{% for error in form.full_name.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input type="text" name="phone" class="form-input" value="{{ form.phone.value|default:'' }}">
+                        {% if form.phone.errors %}
+                            <ul class="error-list">{% for error in form.phone.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">House / Flat</label>
+                        <input type="text" name="house" class="form-input" value="{{ form.house.value|default:'' }}">
+                        {% if form.house.errors %}
+                            <ul class="error-list">{% for error in form.house.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Street</label>
+                        <input type="text" name="street" class="form-input" value="{{ form.street.value|default:'' }}" required>
+                        {% if form.street.errors %}
+                            <ul class="error-list">{% for error in form.street.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">City</label>
+                        <input type="text" name="city" class="form-input" value="{{ form.city.value|default:'' }}" required>
+                        {% if form.city.errors %}
+                            <ul class="error-list">{% for error in form.city.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">County</label>
+                            <input type="text" name="county" class="form-input" value="{{ form.county.value|default:'' }}">
+                            {% if form.county.errors %}
+                                <ul class="error-list">{% for error in form.county.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Postcode</label>
+                            <input type="text" name="postcode" class="form-input" value="{{ form.postcode.value|default:'' }}" required>
+                            {% if form.postcode.errors %}
+                                <ul class="error-list">{% for error in form.postcode.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="place-order-btn">CONTINUE TO PAYMENT →</button>
+                </form>
+            </div>
+        </div>
+
+        <aside class="order-summary">
+            <div class="summary-card">
+                <div class="summary-title">ORDER SUMMARY</div>
+
+                {% for item in cart.items.all %}
+                    <div class="summary-item">
+                        <span>{{ item.product.name }} × {{ item.quantity }}</span>
+                        <span>£{{ item.subtotal }}</span>
+                    </div>
+                {% endfor %}
+
+                <div class="summary-row" style="margin-top:20px;">
+                    <span>Subtotal</span>
+                    <span>£{{ cart.total_price }}</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Delivery</span>
+                    <span>£0.00</span>
+                </div>
+
+                <div class="summary-total">
+                    <div class="total-label">TOTAL</div>
+                    <div class="total-value">£{{ cart.total_price }}</div>
+                </div>
+            </div>
+        </aside>
+    </main>
+</body>
+</html>

@@ -1,170 +1,213 @@
-{% extends "base.html" %}
 {% load static %}
+<!--
+Author: Sadik Mohamud
+Project: InstrWear
+File: templates/shopper/orders.html
+Purpose: Shopper orders template
+-->
 
-{% block title %}InstrWear - My Orders{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSTRWEAR - MY ORDERS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/orders.css' %}" />
-{% endblock %}
+        :root {
+            --bg: #FFFDF5;
+            --fg: #000000;
+            --accent: #FF6B6B;
+            --secondary: #FFD93D;
+            --muted: #C4B5FD;
+            --white: #FFFFFF;
+        }
 
-{% block content %}
-<header class="orders-header">
-  <div class="orders-header__content">
-    <a href="{% url 'landing' %}" class="orders-logo">InstrWear</a>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            position: relative;
+        }
 
-    <div class="orders-header__actions">
-      <button class="icon-btn" type="button" aria-label="Search">🔍</button>
-      <button class="icon-btn" type="button" aria-label="Cart">🛒</button>
-      <button class="icon-btn" type="button" aria-label="Account">👤</button>
-    </div>
-  </div>
-</header>
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(#000 1.5px, transparent 1.5px);
+            background-size: 25px 25px;
+            opacity: 0.02;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-<main class="orders-main">
-  <header class="orders-page-header">
-    <h1 class="orders-page-title">My Orders</h1>
-    <p class="orders-page-subtitle">Track and manage all your fashion deliveries</p>
-  </header>
+        .header {
+            background: var(--white);
+            border-bottom: 4px solid var(--fg);
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 0 0 #000;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-  <section class="tabs" aria-label="Order filters">
-    <button class="tab active" type="button" onclick="filterOrders(event, 'all')">All Orders</button>
-    <button class="tab" type="button" onclick="filterOrders(event, 'active')">Active</button>
-    <button class="tab" type="button" onclick="filterOrders(event, 'completed')">Completed</button>
-    <button class="tab" type="button" onclick="filterOrders(event, 'cancelled')">Cancelled</button>
-  </section>
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            text-decoration: none;
+            color: var(--fg);
+        }
 
-  <section class="orders-container" id="ordersContainer">
-    <article class="order-card" data-status="shipped">
-      <header class="order-header">
-        <div class="order-info">
-          <h2 class="order-id">Order #1847</h2>
-          <div class="order-meta">
-            <span>📍 Urban Style Boutique</span>
-            <span>📅 Today, 2:30 PM</span>
-          </div>
-        </div>
-        <p class="order-status status-shipped">Out for Delivery</p>
-      </header>
+        .main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+        }
 
-      <div class="order-body">
-        <section class="tracking-container">
-          <h3 class="tracking-title">🚚 Track Your Order</h3>
-          <div class="tracking-steps">
-            <div class="tracking-progress" style="width: 75%"></div>
+        .page-title {
+            font-size: 56px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            margin-bottom: 30px;
+            line-height: 1;
+        }
 
-            <div class="tracking-step completed">
-              <div class="step-icon">✓</div>
-              <div class="step-label">Confirmed</div>
+        .order-card {
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 8px 8px 0 0 #000;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid var(--fg);
+        }
+
+        .order-id {
+            font-size: 22px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .order-status {
+            padding: 8px 14px;
+            border: 4px solid var(--fg);
+            box-shadow: 4px 4px 0 0 #000;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            background: var(--secondary);
+        }
+
+        .order-meta {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .order-items {
+            display: grid;
+            gap: 12px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 14px 0;
+            border-top: 2px solid rgba(0,0,0,0.1);
+        }
+
+        .item-name {
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .item-sub {
+            font-size: 13px;
+            font-weight: 700;
+            color: rgba(0,0,0,0.7);
+        }
+
+        .item-total {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+
+        .empty-state {
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 40px;
+            box-shadow: 8px 8px 0 0 #000;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="{% url 'shopper_dashboard' %}" class="logo">INSTRWEAR</a>
+        <a href="{% url 'shopper_product_list' %}" class="logo" style="font-size:14px;">KEEP SHOPPING</a>
+    </header>
+
+    <main class="main">
+        <h1 class="page-title">MY ORDERS</h1>
+
+        {% if orders %}
+            {% for order in orders %}
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-id">ORDER #{{ order.id }}</div>
+                        <div class="order-status">{{ order.status }}</div>
+                    </div>
+
+                    <div class="order-meta">
+                        <div>Payment: {{ order.payment_status }}</div>
+                        <div>Total: £{{ order.total_price }}</div>
+                        <div>Placed: {{ order.created_at }}</div>
+                        <div>Delivery: {{ order.full_name }}, {{ order.house }} {{ order.street }}, {{ order.city }}, {{ order.postcode }}</div>
+                    </div>
+
+                    <div class="order-items">
+                        {% for item in order.items.all %}
+                            <div class="order-item">
+                                <div>
+                                    <div class="item-name">{{ item.product_name }}</div>
+                                    <div class="item-sub">Quantity: {{ item.quantity }}</div>
+                                </div>
+                                <div class="item-total">£{{ item.subtotal }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <h2>No orders yet</h2>
+                <p>Your orders will appear here after checkout.</p>
             </div>
-
-            <div class="tracking-step completed">
-              <div class="step-icon">✓</div>
-              <div class="step-label">Preparing</div>
-            </div>
-
-            <div class="tracking-step completed">
-              <div class="step-icon">✓</div>
-              <div class="step-label">Picked Up</div>
-            </div>
-
-            <div class="tracking-step active">
-              <div class="step-icon">🚚</div>
-              <div class="step-label">On the Way</div>
-            </div>
-
-            <div class="tracking-step">
-              <div class="step-icon">📍</div>
-              <div class="step-label">Delivered</div>
-            </div>
-          </div>
-        </section>
-
-        <section class="order-items">
-          <article class="order-item">
-            <div class="item-image">👕</div>
-            <div class="item-details">
-              <h3 class="item-name">Nike Tech Fleece Hoodie</h3>
-              <p class="item-variant">Size: L, Color: Black</p>
-              <p class="item-store">Urban Style Boutique</p>
-            </div>
-            <div class="item-price-qty">
-              <p class="item-price">$89.99</p>
-              <p class="item-qty">Qty: 1</p>
-            </div>
-          </article>
-
-          <article class="order-item">
-            <div class="item-image">👖</div>
-            <div class="item-details">
-              <h3 class="item-name">Levi's 501 Jeans</h3>
-              <p class="item-variant">Size: 32x32, Color: Blue</p>
-              <p class="item-store">Urban Style Boutique</p>
-            </div>
-            <div class="item-price-qty">
-              <p class="item-price">$98.00</p>
-              <p class="item-qty">Qty: 1</p>
-            </div>
-          </article>
-        </section>
-
-        <footer class="order-footer">
-          <div class="order-total">
-            <p class="total-label">Total</p>
-            <p class="total-value">$187.99</p>
-          </div>
-          <div class="order-actions">
-            <button class="button button--primary" type="button">Track Live</button>
-            <button class="orders-btn-secondary" type="button">Contact Driver</button>
-          </div>
-        </footer>
-      </div>
-    </article>
-  </section>
-</main>
-
-<nav class="bottom-nav" aria-label="Bottom navigation">
-  <a href="{% url 'shopper_dashboard' %}" class="nav-item">
-    <span class="nav-icon">🏠</span>
-    <span class="nav-label">Home</span>
-  </a>
-  <a href="#" class="nav-item">
-    <span class="nav-icon">🔍</span>
-    <span class="nav-label">Browse</span>
-  </a>
-  <a href="{% url 'shopper_orders' %}" class="nav-item active">
-    <span class="nav-icon">📦</span>
-    <span class="nav-label">Orders</span>
-  </a>
-  <a href="#" class="nav-item">
-    <span class="nav-icon">❤️</span>
-    <span class="nav-label">Saved</span>
-  </a>
-  <a href="#" class="nav-item">
-    <span class="nav-icon">👤</span>
-    <span class="nav-label">Account</span>
-  </a>
-</nav>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-  function filterOrders(event, status) {
-    const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(tab => tab.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-
-    const orders = document.querySelectorAll('.order-card');
-
-    orders.forEach(order => {
-      if (status === 'all') {
-        order.style.display = 'block';
-      } else if (status === 'active') {
-        const orderStatus = order.dataset.status;
-        order.style.display = ['pending', 'preparing', 'ready', 'shipped'].includes(orderStatus) ? 'block' : 'none';
-      } else {
-        order.style.display = status === order.dataset.status ? 'block' : 'none';
-      }
-    });
-  }
-</script>
-{% endblock %}
+        {% endif %}
+    </main>
+</body>
+</html>

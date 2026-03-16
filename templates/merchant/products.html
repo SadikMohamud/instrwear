@@ -1,75 +1,629 @@
-{% extends "base.html" %}
 {% load static %}
-
-{% block title %}My Products{% endblock %}
-
-{% block content %}
-<main class="dashboard-shell">
-
-  <section class="dashboard-hero">
-    <p class="dashboard-eyebrow">Merchant Products</p>
-    <h1>Welcome {{ request.user.first_name }} to InstrWear</h1>
-    <p>Manage your inventory, stock levels, and active listings.</p>
-  </section>
-
-  <section class="dashboard-grid" aria-label="Inventory summary">
-    <article class="dashboard-card">
-      <h2>Total Products</h2>
-      <p>{{ total_products }}</p>
-    </article>
-
-    <article class="dashboard-card">
-      <h2>Active Listings</h2>
-      <p>{{ active_products }}</p>
-    </article>
-
-    <article class="dashboard-card">
-      <h2>Low Stock</h2>
-      <p>{{ low_stock_products }}</p>
-    </article>
-
-    <article class="dashboard-card">
-      <h2>Inventory Value</h2>
-      <p>£{{ inventory_value }}</p>
-    </article>
-  </section>
-
-  <section class="dashboard-card" style="margin-top: 20px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <h2>Your Products</h2>
-      <a class="button button--primary" href="{% url 'merchant_add_product' %}">Add Product</a>
-    </div>
-
-    {% if products %}
-      <div style="display:grid; gap:16px;">
-        {% for product in products %}
-          <article style="padding:16px; border:1px solid rgba(255,255,255,0.08); border-radius:16px; background:rgba(255,255,255,0.02);">
-            <h3 style="margin-bottom:8px;">{{ product.name }}</h3>
-            <p style="margin-bottom:8px; color:rgba(255,255,255,0.7);">{{ product.description|default:"No description yet." }}</p>
-            <p style="margin-bottom:6px;">Price: £{{ product.price }}</p>
-            <p style="margin-bottom:6px;">Stock: {{ product.stock }}</p>
-            <p style="margin-bottom:0;">
-              Status:
-              {% if product.is_active %}
-                Active
-              {% else %}
-                Inactive
-              {% endif %}
-            </p>
-          </article>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p>You have not added any products yet.</p>
-    {% endif %}
-  </section>
-
-</main>
-{% endblock %}
-
 <!--
 Author: Sadik Mohamud
 Project: InstrWear
 File: templates/merchant/products.html
-Purpose: Merchant inventory list page
+Purpose: Merchant products inventory template
 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSTRWEAR - MY PRODUCTS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #FFFDF5;
+            --fg: #000000;
+            --accent: #FF6B6B;
+            --secondary: #FFD93D;
+            --muted: #C4B5FD;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: 40px 40px;
+            background-image:
+                linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 280px;
+            background: var(--white);
+            border-right: 4px solid var(--fg);
+            padding: 30px 20px;
+            z-index: 100;
+            box-shadow: 4px 0 0 0 #000;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            text-decoration: none;
+            color: var(--fg);
+            display: inline-block;
+        }
+
+        .merchant-name {
+            font-size: 13px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .store-name {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: var(--secondary);
+            padding: 8px;
+            border: 4px solid var(--fg);
+            box-shadow: 4px 4px 0 0 #000;
+            word-break: break-word;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 12px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            text-decoration: none;
+            transition: all 0.1s;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--fg);
+            border: 4px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: var(--muted);
+            border: 4px solid var(--fg);
+            box-shadow: 4px 4px 0 0 #000;
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: var(--accent);
+            border: 4px solid var(--fg);
+            box-shadow: 6px 6px 0 0 #000;
+            color: var(--white);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        .main {
+            margin-left: 280px;
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .messages {
+            margin-bottom: 24px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .message {
+            border: 4px solid var(--fg);
+            padding: 12px 14px;
+            font-size: 14px;
+            font-weight: 700;
+            background: var(--white);
+            box-shadow: 4px 4px 0 0 #000;
+        }
+
+        .message.error {
+            background: #ffe3e3;
+        }
+
+        .message.success {
+            background: #dcfce7;
+        }
+
+        .hero-section {
+            background: var(--secondary);
+            border: 4px solid var(--fg);
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 12px 12px 0 0 #000;
+            transform: rotate(-1deg);
+        }
+
+        .hero-eyebrow {
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 15px;
+            background: var(--white);
+            padding: 6px 12px;
+            border: 2px solid var(--fg);
+            display: inline-block;
+        }
+
+        .hero-title {
+            font-size: 42px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            line-height: 1;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 30px;
+            transition: all 0.1s;
+            box-shadow: 8px 8px 0 0 #000;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 14px 14px 0 0 #000;
+        }
+
+        .stat-card:nth-child(1) { background: var(--accent); color: var(--white); transform: rotate(1deg); }
+        .stat-card:nth-child(2) { background: var(--secondary); transform: rotate(-1deg); }
+        .stat-card:nth-child(3) { background: var(--muted); transform: rotate(0.5deg); }
+        .stat-card:nth-child(4) { background: var(--white); transform: rotate(-0.5deg); }
+
+        .stat-card:nth-child(1):hover { transform: rotate(1deg) translateY(-5px); }
+        .stat-card:nth-child(2):hover { transform: rotate(-1deg) translateY(-5px); }
+        .stat-card:nth-child(3):hover { transform: rotate(0.5deg) translateY(-5px); }
+        .stat-card:nth-child(4):hover { transform: rotate(-0.5deg) translateY(-5px); }
+
+        .stat-title {
+            font-size: 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 15px;
+        }
+
+        .stat-value {
+            font-size: 48px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .products-section {
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 40px;
+            box-shadow: 8px 8px 0 0 #000;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 4px solid var(--fg);
+            flex-wrap: wrap;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+        }
+
+        .btn-add {
+            padding: 14px 28px;
+            background: var(--accent);
+            border: 4px solid var(--fg);
+            color: var(--white);
+            font-size: 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-family: 'Space Grotesk', sans-serif;
+            box-shadow: 6px 6px 0 0 #000;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-3px);
+            box-shadow: 9px 9px 0 0 #000;
+        }
+
+        .products-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .product-item {
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 25px;
+            transition: all 0.1s;
+            box-shadow: 4px 4px 0 0 #000;
+        }
+
+        .product-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 8px 8px 0 0 #000;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 16px;
+            margin-bottom: 15px;
+        }
+
+        .product-name {
+            font-size: 22px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            margin-bottom: 8px;
+        }
+
+        .product-status {
+            padding: 6px 14px;
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            border: 4px solid var(--fg);
+            box-shadow: 4px 4px 0 0 #000;
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+        }
+
+        .status-active {
+            background: #2ed573;
+            color: var(--white);
+        }
+
+        .status-inactive {
+            background: #ff4757;
+            color: var(--white);
+        }
+
+        .product-desc {
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.6;
+            color: rgba(0, 0, 0, 0.7);
+            margin-bottom: 15px;
+        }
+
+        .product-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding-top: 15px;
+            border-top: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .meta-item {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .meta-label {
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 12px;
+            margin-bottom: 5px;
+            opacity: 0.7;
+        }
+
+        .meta-value {
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+        }
+
+        .empty-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            font-size: 28px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .empty-text {
+            font-size: 16px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 0.6);
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+                padding: 20px 10px;
+            }
+
+            .store-name,
+            .merchant-name,
+            .nav-label {
+                display: none;
+            }
+
+            .main {
+                margin-left: 80px;
+                padding: 20px;
+            }
+
+            .hero-section {
+                transform: rotate(0deg);
+                padding: 25px;
+            }
+
+            .hero-title {
+                font-size: 28px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                transform: rotate(0deg) !important;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px) !important;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .btn-add {
+                width: 100%;
+            }
+
+            .product-header {
+                flex-direction: column;
+            }
+
+            .product-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <a href="{% url 'merchant_dashboard' %}" class="logo">INSTRWEAR</a>
+
+        <div class="merchant-name">
+            {{ request.user.first_name|default:"MERCHANT"|upper }}
+        </div>
+
+        <div class="store-name">
+            {% if request.user.merchant_profile.business_name %}
+                {{ request.user.merchant_profile.business_name|upper }}
+            {% else %}
+                YOUR STORE
+            {% endif %}
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="{% url 'merchant_dashboard' %}" class="nav-link">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{% url 'merchant_products' %}" class="nav-link active">
+                    <span class="nav-icon">👕</span>
+                    <span class="nav-label">Products</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{% url 'merchant_add_product' %}" class="nav-link">
+                    <span class="nav-icon">➕</span>
+                    <span class="nav-label">Add Product</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{% url 'merchant_onboarding' %}" class="nav-link">
+                    <span class="nav-icon">🏪</span>
+                    <span class="nav-label">Store Profile</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{% url 'logout' %}" class="nav-link">
+                    <span class="nav-icon">🚪</span>
+                    <span class="nav-label">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <section class="hero-section">
+            <div class="hero-eyebrow">MERCHANT PRODUCTS</div>
+            <h1 class="hero-title">
+                WELCOME {{ request.user.first_name|default:"MERCHANT"|upper }} TO INSTRWEAR
+            </h1>
+            <p class="hero-subtitle">Manage your inventory, stock levels, and active listings.</p>
+        </section>
+
+        <section class="stats-grid">
+            <article class="stat-card">
+                <h2 class="stat-title">Total Products</h2>
+                <div class="stat-value">{{ total_products }}</div>
+            </article>
+
+            <article class="stat-card">
+                <h2 class="stat-title">Active Listings</h2>
+                <div class="stat-value">{{ active_products }}</div>
+            </article>
+
+            <article class="stat-card">
+                <h2 class="stat-title">Low Stock</h2>
+                <div class="stat-value">{{ low_stock_products }}</div>
+            </article>
+
+            <article class="stat-card">
+                <h2 class="stat-title">Inventory Value</h2>
+                <div class="stat-value">£{{ inventory_value }}</div>
+            </article>
+        </section>
+
+        <section class="products-section">
+            <div class="section-header">
+                <h2 class="section-title">YOUR PRODUCTS</h2>
+                <a href="{% url 'merchant_add_product' %}" class="btn-add">+ ADD PRODUCT</a>
+            </div>
+
+            {% if products %}
+                <div class="products-list">
+                    {% for product in products %}
+                        <article class="product-item">
+                            <div class="product-header">
+                                <div>
+                                    <h3 class="product-name">{{ product.name }}</h3>
+                                </div>
+
+                                {% if product.is_active %}
+                                    <div class="product-status status-active">ACTIVE</div>
+                                {% else %}
+                                    <div class="product-status status-inactive">INACTIVE</div>
+                                {% endif %}
+                            </div>
+
+                            {% if product.description %}
+                                <p class="product-desc">{{ product.description }}</p>
+                            {% else %}
+                                <p class="product-desc">No product description added yet.</p>
+                            {% endif %}
+
+                            <div class="product-meta">
+                                <div class="meta-item">
+                                    <div class="meta-label">Price</div>
+                                    <div class="meta-value">£{{ product.price }}</div>
+                                </div>
+
+                                <div class="meta-item">
+                                    <div class="meta-label">Stock</div>
+                                    <div class="meta-value">{{ product.stock }} units</div>
+                                </div>
+
+                                <div class="meta-item">
+                                    <div class="meta-label">Category</div>
+                                    <div class="meta-value">
+                                        {% if product.category %}
+                                            {{ product.category.name }}
+                                        {% else %}
+                                            Uncategorised
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📦</div>
+                    <h3 class="empty-title">NO PRODUCTS YET</h3>
+                    <p class="empty-text">You have not added any products yet.</p>
+                    <a href="{% url 'merchant_add_product' %}" class="btn-add">ADD YOUR FIRST PRODUCT</a>
+                </div>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

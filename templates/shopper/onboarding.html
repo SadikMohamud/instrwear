@@ -2,8 +2,8 @@
 <!--
 Author: Sadik Mohamud
 Project: InstrWear
-File: templates/accounts/register_choice.html
-Purpose: Account type selection page for shopper and merchant registration
+File: templates/shopper/onboarding.html
+Purpose: Shopper onboarding template
 -->
 
 <!DOCTYPE html>
@@ -11,14 +11,10 @@ Purpose: Account type selection page for shopper and merchant registration
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INSTRWEAR - CREATE AN ACCOUNT</title>
+    <title>INSTRWEAR - SHOPPER REGISTRATION</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --bg: #FFFDF5;
@@ -44,10 +40,7 @@ Purpose: Account type selection page for shopper and merchant registration
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
             background-image: radial-gradient(#000 1.5px, transparent 1.5px);
             background-size: 30px 30px;
             opacity: 0.03;
@@ -56,14 +49,30 @@ Purpose: Account type selection page for shopper and merchant registration
         }
 
         .container {
-            max-width: 900px;
+            max-width: 600px;
             width: 100%;
             background: var(--white);
             border: 4px solid var(--fg);
             padding: 50px 40px;
             position: relative;
             z-index: 1;
-            box-shadow: 16px 16px 0px 0px #000;
+            box-shadow: 12px 12px 0 0 #000;
+            transform: rotate(-1deg);
+        }
+
+        .badge {
+            position: absolute;
+            top: -20px;
+            right: 40px;
+            background: var(--accent);
+            border: 4px solid var(--fg);
+            padding: 8px 20px;
+            font-weight: 900;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transform: rotate(3deg);
+            box-shadow: 4px 4px 0 0 #000;
         }
 
         .logo {
@@ -74,242 +83,323 @@ Purpose: Account type selection page for shopper and merchant registration
             letter-spacing: -0.05em;
             text-transform: uppercase;
             line-height: 1;
-            text-decoration: none;
-            color: var(--fg);
-            display: block;
-        }
-
-        .title {
-            text-align: center;
-            font-size: 36px;
-            font-weight: 900;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: -0.02em;
         }
 
         .subtitle {
             text-align: center;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
-            margin-bottom: 50px;
-            color: rgba(0, 0, 0, 0.7);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
         }
 
-        .role-grid {
+        .messages {
+            margin-bottom: 24px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 50px;
+            gap: 12px;
         }
 
-        .role-card {
-            background: var(--white);
+        .message {
             border: 4px solid var(--fg);
-            padding: 40px 30px;
-            transition: all 0.1s;
-            box-shadow: 8px 8px 0px 0px #000;
+            padding: 12px 14px;
+            font-size: 14px;
+            font-weight: 700;
+            background: var(--white);
+            box-shadow: 4px 4px 0 0 #000;
+        }
+
+        .message.error { background: #ffe3e3; }
+        .message.success { background: #dcfce7; }
+
+        .profile-upload {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+            position: relative;
         }
 
-        .role-card:nth-child(1) {
-            transform: rotate(-1deg);
-        }
-
-        .role-card:nth-child(2) {
-            transform: rotate(1deg);
-        }
-
-        .role-card:hover {
-            transform: translateY(-6px) rotate(0deg);
-            box-shadow: 14px 14px 0px 0px #000;
-        }
-
-        .role-icon {
-            width: 80px;
-            height: 80px;
+        .profile-pic {
+            width: 140px;
+            height: 140px;
             background: var(--secondary);
             border: 4px solid var(--fg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
-            margin: 0 auto 25px;
-            box-shadow: 4px 4px 0px 0px #000;
+            font-size: 60px;
+            cursor: pointer;
+            transition: all 0.1s ease-out;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 6px 6px 0 0 #000;
         }
 
-        .role-card:nth-child(2) .role-icon {
-            background: var(--muted);
+        .profile-pic:hover {
+            transform: translateY(-4px);
+            box-shadow: 10px 10px 0 0 #000;
         }
 
-        .role-title {
-            font-size: 28px;
-            font-weight: 900;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            text-align: center;
-            letter-spacing: -0.01em;
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .role-desc {
-            font-size: 16px;
+        .upload-label {
+            margin-top: 15px;
+            font-size: 14px;
             font-weight: 700;
-            line-height: 1.6;
-            color: rgba(0, 0, 0, 0.7);
-            text-align: center;
-            margin-bottom: 30px;
-            flex: 1;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 8px 16px;
+            background: var(--fg);
+            color: var(--white);
+            border: 4px solid var(--fg);
+            box-shadow: 4px 4px 0 0 #000;
+            transition: all 0.1s;
         }
 
-        .btn-role {
+        .upload-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 6px 6px 0 0 #000;
+        }
+
+        #profileImageInput { display: none; }
+
+        .form-group { margin-bottom: 25px; }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .form-input {
+            width: 100%;
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 14px 16px;
+            font-size: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            transition: all 0.2s;
+            box-shadow: 4px 4px 0 0 #000;
+        }
+
+        .form-input:focus {
+            outline: none;
+            background: var(--secondary);
+            box-shadow: 6px 6px 0 0 #000;
+        }
+
+        .form-input::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+            font-weight: 500;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .address-section {
+            background: var(--muted);
+            border: 4px solid var(--fg);
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: 8px 8px 0 0 #000;
+            transform: rotate(1deg);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 900;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .btn-submit {
             width: 100%;
             padding: 18px;
             background: var(--accent);
             border: 4px solid var(--fg);
-            color: var(--white);
+            color: var(--fg);
             font-size: 16px;
             font-weight: 900;
             text-transform: uppercase;
+            letter-spacing: 0.15em;
             cursor: pointer;
             transition: all 0.1s;
+            margin-top: 30px;
             font-family: 'Space Grotesk', sans-serif;
-            box-shadow: 6px 6px 0px 0px #000;
-            letter-spacing: 0.1em;
-            text-decoration: none;
-            display: block;
-            text-align: center;
+            box-shadow: 8px 8px 0 0 #000;
         }
 
-        .btn-role:hover {
-            transform: translateY(-3px);
-            box-shadow: 9px 9px 0px 0px #000;
+        .btn-submit:hover {
+            transform: translateY(-4px);
+            box-shadow: 12px 12px 0 0 #000;
         }
 
-        .btn-role:active {
-            transform: translateY(2px) translateX(2px);
-            box-shadow: 2px 2px 0px 0px #000;
+        .shape {
+            position: absolute;
+            background: var(--secondary);
+            border: 4px solid var(--fg);
+            box-shadow: 4px 4px 0 0 #000;
         }
 
-        .footer-section {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 4px solid var(--fg);
+        .shape-1 {
+            width: 60px;
+            height: 60px;
+            top: -30px;
+            left: -30px;
+            transform: rotate(45deg);
         }
 
-        .footer-text {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-
-        .footer-link {
-            font-size: 14px;
-            font-weight: 900;
-            color: var(--fg);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .footer-link:hover {
-            color: var(--accent);
-        }
-
-        .back-link {
-            display: block;
-            margin-top: 15px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--fg);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .back-link:hover {
-            color: var(--accent);
+        .shape-2 {
+            width: 40px;
+            height: 40px;
+            bottom: 40px;
+            right: -20px;
+            transform: rotate(12deg);
         }
 
         @media (max-width: 768px) {
             .container {
-                padding: 40px 25px;
+                padding: 40px 30px;
+                transform: rotate(0deg);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
             }
 
             .logo {
                 font-size: 36px;
             }
 
-            .title {
-                font-size: 28px;
+            .badge {
+                right: 20px;
+                top: -15px;
             }
 
-            .role-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .role-card {
-                transform: rotate(0deg) !important;
-            }
-
-            .role-card:hover {
-                transform: translateY(-6px) !important;
+            .address-section {
+                transform: rotate(0deg);
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="{% url 'landing' %}" class="logo">INSTRWEAR</a>
-        <h1 class="title">CREATE AN ACCOUNT</h1>
-        <p class="subtitle">Choose how you want to use InstrWear</p>
+        <div class="badge">NEW USER</div>
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
 
-        <div class="role-grid">
-            <article class="role-card">
-                <div class="role-icon">🛍️</div>
-                <h2 class="role-title">SHOPPER</h2>
-                <p class="role-desc">
-                    Browse fashion, discover local brands, and get your fit delivered fast.
-                </p>
-                <a href="{% url 'register_shopper' %}" class="btn-role">
-                    REGISTER AS SHOPPER →
-                </a>
-            </article>
+        <div class="logo">INSTRWEAR</div>
+        <p class="subtitle">Shopper Registration</p>
 
-            <article class="role-card">
-                <div class="role-icon">🏪</div>
-                <h2 class="role-title">MERCHANT</h2>
-                <p class="role-desc">
-                    Open your storefront, upload products, and start selling.
-                </p>
-                <a href="{% url 'register_merchant' %}" class="btn-role">
-                    REGISTER AS MERCHANT →
-                </a>
-            </article>
-        </div>
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-        <footer class="footer-section">
-            <p class="footer-text">
-                Already have an account?
-                <a href="{% url 'login' %}" class="footer-link">LOG IN HERE</a>
-            </p>
-            <a href="{% url 'landing' %}" class="back-link">← BACK TO HOME</a>
-        </footer>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="profile-upload">
+                <div class="profile-pic" onclick="document.getElementById('profileImageInput').click()">
+                    <span id="profilePlaceholder" {% if profile.profile_image %}style="display:none;"{% endif %}>📸</span>
+                    <img
+                        id="profilePreview"
+                        {% if profile.profile_image %}
+                            src="{{ profile.profile_image.url }}"
+                            style="display:block;"
+                        {% else %}
+                            style="display:none;"
+                        {% endif %}
+                        alt="Profile Preview"
+                    >
+                </div>
+                <label class="upload-label" for="profileImageInput">UPLOAD PHOTO</label>
+                <input type="file" id="profileImageInput" name="profile_image" accept="image/*">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">First Name</label>
+                    <input type="text" class="form-input" name="first_name" placeholder="John" value="{{ request.user.first_name|default:'' }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" class="form-input" name="last_name" placeholder="Smith" value="{{ request.user.last_name|default:'' }}" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" class="form-input" name="phone" placeholder="07123 456789" value="{{ profile.phone|default:'' }}" required>
+            </div>
+
+            <div class="address-section">
+                <h3 class="section-title">📍 Delivery Address</h3>
+
+                <div class="form-group">
+                    <label class="form-label">House Number/Name</label>
+                    <input type="text" class="form-input" name="house" placeholder="24" value="{{ profile.house|default:'' }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Street</label>
+                    <input type="text" class="form-input" name="street" placeholder="High Street" value="{{ profile.street|default:'' }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Town/City</label>
+                    <input type="text" class="form-input" name="city" placeholder="London" value="{{ profile.city|default:'' }}" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">County</label>
+                        <input type="text" class="form-input" name="county" placeholder="Greater London" value="{{ profile.county|default:'' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Postcode</label>
+                        <input type="text" class="form-input" name="postcode" placeholder="SW1A 1AA" value="{{ profile.postcode|default:'' }}" required>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">START SHOPPING →</button>
+        </form>
     </div>
 
-    <!--Start of Tawk.to Script-->
-    <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/69b4593c6ccaea1c3830fc4f/1jjk7p5fv';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
+    <script>
+        document.getElementById('profileImageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePreview').src = e.target.result;
+                    document.getElementById('profilePreview').style.display = 'block';
+                    document.getElementById('profilePlaceholder').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     </script>
-    <!--End of Tawk.to Script-->
 </body>
 </html>

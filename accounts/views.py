@@ -103,7 +103,7 @@ def login_view(request):
 
         # Platform admin / Django superuser
         if user.is_superuser or user.role == "admin":
-            return redirect("/admin/")
+            return redirect("landing")
 
         # Merchant dashboard
         if user.role == "merchant":

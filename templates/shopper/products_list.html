@@ -3,7 +3,7 @@
 Author: Sadik Mohamud
 Project: InstrWear
 File: templates/shopper/products_list.html
-Purpose: Shopper product browsing marketplace template
+Purpose: Shopper browse products template
 -->
 
 <!DOCTYPE html>
@@ -14,11 +14,7 @@ Purpose: Shopper product browsing marketplace template
     <title>INSTRWEAR - BROWSE PRODUCTS</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --bg: #FFFDF5;
@@ -72,7 +68,6 @@ Purpose: Shopper product browsing marketplace template
         .header-actions {
             display: flex;
             gap: 15px;
-            align-items: center;
         }
 
         .icon-btn {
@@ -96,21 +91,15 @@ Purpose: Shopper product browsing marketplace template
             box-shadow: 6px 6px 0 0 #000;
         }
 
-        .icon-btn:active {
-            transform: translateY(2px) translateX(2px);
-            box-shadow: none;
-        }
-
         .cart-badge {
             position: absolute;
             top: -8px;
             right: -8px;
-            min-width: 24px;
+            width: 24px;
             height: 24px;
-            padding: 0 6px;
             background: var(--accent);
             border: 2px solid var(--fg);
-            border-radius: 999px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -142,19 +131,11 @@ Purpose: Shopper product browsing marketplace template
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
             box-shadow: 6px 6px 0 0 #000;
-            transition: all 0.2s;
         }
 
         .search-box:focus {
             outline: none;
             background: var(--secondary);
-            transform: translateY(-2px);
-            box-shadow: 8px 8px 0 0 #000;
-        }
-
-        .search-box::placeholder {
-            color: rgba(0, 0, 0, 0.3);
-            font-weight: 500;
         }
 
         .search-btn {
@@ -166,20 +147,9 @@ Purpose: Shopper product browsing marketplace template
             font-weight: 900;
             text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.1s;
             font-family: 'Space Grotesk', sans-serif;
             box-shadow: 6px 6px 0 0 #000;
             letter-spacing: 0.1em;
-        }
-
-        .search-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 9px 9px 0 0 #000;
-        }
-
-        .search-btn:active {
-            transform: translateY(2px) translateX(2px);
-            box-shadow: 2px 2px 0 0 #000;
         }
 
         .main {
@@ -223,68 +193,32 @@ Purpose: Shopper product browsing marketplace template
             border-bottom: 4px solid var(--fg);
         }
 
-        .filter-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .category-link {
+            display: block;
+            margin-bottom: 12px;
             padding: 8px;
-            transition: all 0.1s;
             text-decoration: none;
             color: var(--fg);
-        }
-
-        .filter-option:hover {
-            background: var(--secondary);
-            transform: translateX(4px);
-        }
-
-        .filter-radio {
-            width: 24px;
-            height: 24px;
-            border: 4px solid var(--fg);
-            background: var(--white);
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-        }
-
-        .filter-radio.checked {
-            background: var(--accent);
-            color: var(--white);
-        }
-
-        .filter-label {
             font-size: 14px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            transition: all 0.1s;
         }
 
-        .filter-clear {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 10px 16px;
-            background: var(--fg);
-            color: var(--white);
-            border: 4px solid var(--fg);
-            box-shadow: 4px 4px 0 0 #000;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 900;
-            text-transform: uppercase;
+        .category-link:hover,
+        .category-link.active {
+            background: var(--secondary);
+            transform: translateX(4px);
         }
 
-        .products-section {
-            position: relative;
-        }
+        .products-section { position: relative; }
 
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 16px;
+            gap: 15px;
             margin-bottom: 30px;
             padding-bottom: 15px;
             border-bottom: 4px solid var(--fg);
@@ -300,8 +234,7 @@ Purpose: Shopper product browsing marketplace template
 
         .sort-form {
             display: flex;
-            gap: 12px;
-            align-items: center;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
@@ -315,17 +248,6 @@ Purpose: Shopper product browsing marketplace template
             text-transform: uppercase;
             cursor: pointer;
             box-shadow: 4px 4px 0 0 #000;
-            transition: all 0.1s;
-        }
-
-        .sort-select:hover {
-            transform: translateY(-2px);
-            box-shadow: 6px 6px 0 0 #000;
-        }
-
-        .sort-select:focus {
-            outline: none;
-            background: var(--muted);
         }
 
         .products-grid {
@@ -365,7 +287,6 @@ Purpose: Shopper product browsing marketplace template
             width: 100%;
             height: 100%;
             object-fit: cover;
-            display: block;
         }
 
         .product-badge {
@@ -382,23 +303,6 @@ Purpose: Shopper product browsing marketplace template
             transform: rotate(3deg);
             box-shadow: 4px 4px 0 0 #000;
             color: var(--white);
-        }
-
-        .wishlist-btn {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            width: 42px;
-            height: 42px;
-            background: var(--white);
-            border: 4px solid var(--fg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            box-shadow: 4px 4px 0 0 #000;
-            text-decoration: none;
-            color: var(--fg);
         }
 
         .product-info {
@@ -423,6 +327,11 @@ Purpose: Shopper product browsing marketplace template
             line-height: 1.2;
         }
 
+        .product-name a {
+            text-decoration: none;
+            color: var(--fg);
+        }
+
         .product-price {
             font-size: 28px;
             font-weight: 900;
@@ -445,20 +354,12 @@ Purpose: Shopper product browsing marketplace template
             font-weight: 900;
             text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.1s;
             font-family: 'Space Grotesk', sans-serif;
             box-shadow: 4px 4px 0 0 #000;
             letter-spacing: 0.1em;
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-add-cart:hover {
-            background: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 6px 6px 0 0 #000;
+            display: inline-block;
+            text-align: center;
         }
 
         .btn-quick-view {
@@ -466,20 +367,13 @@ Purpose: Shopper product browsing marketplace template
             height: 48px;
             background: var(--white);
             border: 4px solid var(--fg);
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
             font-size: 18px;
-            transition: all 0.1s;
             box-shadow: 4px 4px 0 0 #000;
             text-decoration: none;
             color: var(--fg);
-        }
-
-        .btn-quick-view:hover {
-            background: var(--secondary);
-            transform: translateY(-2px);
-            box-shadow: 6px 6px 0 0 #000;
         }
 
         .empty-state {
@@ -487,20 +381,6 @@ Purpose: Shopper product browsing marketplace template
             border: 4px solid var(--fg);
             padding: 40px;
             box-shadow: 8px 8px 0 0 #000;
-            text-align: center;
-        }
-
-        .empty-title {
-            font-size: 28px;
-            font-weight: 900;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-
-        .empty-text {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 20px;
         }
 
         .bottom-nav {
@@ -535,14 +415,7 @@ Purpose: Shopper product browsing marketplace template
             margin-top: -8px;
         }
 
-        .nav-item:not(.active):hover {
-            transform: translateY(-4px);
-        }
-
-        .nav-icon {
-            font-size: 24px;
-        }
-
+        .nav-icon { font-size: 24px; }
         .nav-label {
             font-size: 11px;
             font-weight: 700;
@@ -569,49 +442,23 @@ Purpose: Shopper product browsing marketplace template
             z-index: 99;
         }
 
-        .fab:hover {
-            transform: translateY(-6px) rotate(90deg);
-            box-shadow: 12px 12px 0 0 #000;
-        }
-
         @media (max-width: 1200px) {
-            .products-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 768px) {
-            .header {
-                padding: 15px 20px;
-            }
-
-            .search-section {
-                padding: 20px;
-            }
-
-            .search-container {
-                flex-direction: column;
-            }
-
+            .header { padding: 15px 20px; }
+            .search-section { padding: 20px; }
+            .search-container { flex-direction: column; }
             .main {
                 grid-template-columns: 1fr;
                 padding: 20px;
                 padding-bottom: 100px;
                 gap: 30px;
             }
-
-            .filters {
-                position: static;
-            }
-
-            .filter-section {
-                transform: rotate(0deg) !important;
-            }
-
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
-
+            .filters { position: static; }
+            .filter-section { transform: rotate(0deg) !important; }
+            .products-grid { grid-template-columns: 1fr; }
             .fab {
                 bottom: 90px;
                 right: 20px;
@@ -620,100 +467,59 @@ Purpose: Shopper product browsing marketplace template
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <a href="{% url 'shopper_dashboard' %}" class="logo">INSTRWEAR</a>
 
         <div class="header-actions">
-            <a href="{% url 'shopper_orders' %}" class="icon-btn" title="Orders">
-                <span>📦</span>
-            </a>
-
-            <a href="{% url 'cart_view' %}" class="icon-btn" title="Cart">
+            <a href="{% url 'cart_view' %}" class="icon-btn">
                 <span>🛒</span>
                 {% if cart_count %}
                     <div class="cart-badge">{{ cart_count }}</div>
                 {% endif %}
             </a>
 
-            <a href="{% url 'shopper_onboarding' %}" class="icon-btn" title="Profile">
+            <a href="{% url 'shopper_onboarding' %}" class="icon-btn">
                 <span>👤</span>
             </a>
         </div>
     </header>
 
-    <!-- Search Section -->
     <section class="search-section">
-        <form method="get" action="{% url 'shopper_product_list' %}" class="search-container">
+        <form method="GET" class="search-container">
             <input
                 type="text"
-                name="q"
                 class="search-box"
+                name="q"
+                value="{{ request.GET.q|default:'' }}"
                 placeholder="SEARCH FOR CLOTHES, SHOES, ACCESSORIES..."
-                value="{{ request.GET.q }}"
             >
             <button type="submit" class="search-btn">SEARCH</button>
         </form>
     </section>
 
-    <!-- Main Content -->
     <main class="main">
-        <!-- Filters Sidebar -->
         <aside class="filters">
             <div class="filter-section">
                 <h3 class="filter-title">CATEGORY</h3>
-
-                <a href="{% url 'shopper_product_list' %}" class="filter-option">
-                    <div class="filter-radio {% if not request.GET.category %}checked{% endif %}">
-                        {% if not request.GET.category %}✓{% endif %}
-                    </div>
-                    <div class="filter-label">All Items</div>
+                <a href="{% url 'shopper_product_list' %}" class="category-link {% if not request.GET.category %}active{% endif %}">
+                    All Items
                 </a>
-
                 {% for category in categories %}
-                    <a href="?category={{ category.slug }}" class="filter-option">
-                        <div class="filter-radio {% if request.GET.category == category.slug %}checked{% endif %}">
-                            {% if request.GET.category == category.slug %}✓{% endif %}
-                        </div>
-                        <div class="filter-label">{{ category.name }}</div>
+                    <a
+                        href="{% url 'shopper_product_list' %}?category={{ category.slug }}"
+                        class="category-link {% if request.GET.category == category.slug %}active{% endif %}"
+                    >
+                        {{ category.name }}
                     </a>
                 {% endfor %}
-
-                <a href="{% url 'shopper_product_list' %}" class="filter-clear">Clear Filters</a>
-            </div>
-
-            <div class="filter-section">
-                <h3 class="filter-title">SORT</h3>
-
-                <a href="?sort=newest{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="filter-option">
-                    <div class="filter-radio {% if request.GET.sort == 'newest' or not request.GET.sort %}checked{% endif %}">
-                        {% if request.GET.sort == 'newest' or not request.GET.sort %}✓{% endif %}
-                    </div>
-                    <div class="filter-label">Newest</div>
-                </a>
-
-                <a href="?sort=price_low{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="filter-option">
-                    <div class="filter-radio {% if request.GET.sort == 'price_low' %}checked{% endif %}">
-                        {% if request.GET.sort == 'price_low' %}✓{% endif %}
-                    </div>
-                    <div class="filter-label">Price Low-High</div>
-                </a>
-
-                <a href="?sort=price_high{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="filter-option">
-                    <div class="filter-radio {% if request.GET.sort == 'price_high' %}checked{% endif %}">
-                        {% if request.GET.sort == 'price_high' %}✓{% endif %}
-                    </div>
-                    <div class="filter-label">Price High-Low</div>
-                </a>
             </div>
         </aside>
 
-        <!-- Products Grid -->
         <section class="products-section">
             <div class="section-header">
                 <div class="results-count">SHOWING {{ products|length }} PRODUCTS</div>
 
-                <form method="get" action="{% url 'shopper_product_list' %}" class="sort-form">
+                <form method="GET" class="sort-form">
                     {% if request.GET.q %}
                         <input type="hidden" name="q" value="{{ request.GET.q }}">
                     {% endif %}
@@ -721,10 +527,10 @@ Purpose: Shopper product browsing marketplace template
                         <input type="hidden" name="category" value="{{ request.GET.category }}">
                     {% endif %}
 
-                    <select name="sort" class="sort-select" onchange="this.form.submit()">
-                        <option value="newest" {% if request.GET.sort == 'newest' or not request.GET.sort %}selected{% endif %}>SORT BY: NEWEST</option>
-                        <option value="price_low" {% if request.GET.sort == 'price_low' %}selected{% endif %}>SORT BY: PRICE LOW-HIGH</option>
-                        <option value="price_high" {% if request.GET.sort == 'price_high' %}selected{% endif %}>SORT BY: PRICE HIGH-LOW</option>
+                    <select class="sort-select" name="sort" onchange="this.form.submit()">
+                        <option value="newest" {% if request.GET.sort == "newest" or not request.GET.sort %}selected{% endif %}>SORT BY: NEWEST</option>
+                        <option value="price_low" {% if request.GET.sort == "price_low" %}selected{% endif %}>SORT BY: PRICE LOW-HIGH</option>
+                        <option value="price_high" {% if request.GET.sort == "price_high" %}selected{% endif %}>SORT BY: PRICE HIGH-LOW</option>
                     </select>
                 </form>
             </div>
@@ -734,35 +540,37 @@ Purpose: Shopper product browsing marketplace template
                     {% for product in products %}
                         <div class="product-card">
                             <div class="product-image">
-                                <a href="#" class="wishlist-btn" title="Save item">♡</a>
-
-                                {% if product.created_at %}
-                                    <div class="product-badge">LIVE</div>
-                                {% endif %}
-
                                 {% if product.image %}
                                     <img src="{{ product.image.url }}" alt="{{ product.name }}">
                                 {% else %}
-                                    <span>🛍️</span>
+                                    <span>👕</span>
+                                {% endif %}
+                                {% if product.created_at %}
+                                    <div class="product-badge">LIVE</div>
                                 {% endif %}
                             </div>
 
                             <div class="product-info">
                                 <div class="product-store">
+                                    @
                                     {% if product.merchant.merchant_profile.business_name %}
-                                        @ {{ product.merchant.merchant_profile.business_name }}
+                                        {{ product.merchant.merchant_profile.business_name }}
                                     {% else %}
-                                        @ {{ product.merchant.email }}
+                                        {{ product.merchant.first_name|default:product.merchant.email }}
                                     {% endif %}
                                 </div>
 
-                                <h3 class="product-name">{{ product.name }}</h3>
+                                <h3 class="product-name">
+                                    <a href="{% url 'shopper_product_detail' product.slug %}">
+                                        {{ product.name }}
+                                    </a>
+                                </h3>
 
                                 <div class="product-price">£{{ product.price }}</div>
 
                                 <div class="product-actions">
                                     <a href="{% url 'add_to_cart' product.id %}" class="btn-add-cart">ADD TO CART</a>
-                                    <a href="#" class="btn-quick-view" title="Quick View">👁</a>
+                                    <a href="{% url 'shopper_product_detail' product.slug %}" class="btn-quick-view">👁</a>
                                 </div>
                             </div>
                         </div>
@@ -770,22 +578,19 @@ Purpose: Shopper product browsing marketplace template
                 </div>
             {% else %}
                 <div class="empty-state">
-                    <h2 class="empty-title">NO PRODUCTS FOUND</h2>
-                    <p class="empty-text">There are no matching items right now. Try clearing your search or filters.</p>
-                    <a href="{% url 'shopper_product_list' %}" class="btn-add-cart">VIEW ALL PRODUCTS</a>
+                    <h2>No products found</h2>
+                    <p>Try another search or category.</p>
                 </div>
             {% endif %}
         </section>
     </main>
 
-    <!-- Floating Action Button -->
-    <button class="fab" type="button" id="scrollToTopBtn">🔝</button>
+    <button class="fab" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">🔝</button>
 
-    <!-- Bottom Navigation -->
     <nav class="bottom-nav">
-        <a href="{% url 'landing' %}" class="nav-item">
+        <a href="{% url 'shopper_dashboard' %}" class="nav-item">
             <div class="nav-icon">🏠</div>
-            <div class="nav-label">Home</div>
+            <div class="nav-label">Dash</div>
         </a>
 
         <a href="{% url 'shopper_product_list' %}" class="nav-item active">
@@ -793,9 +598,9 @@ Purpose: Shopper product browsing marketplace template
             <div class="nav-label">Browse</div>
         </a>
 
-        <a href="{% url 'shopper_dashboard' %}" class="nav-item">
-            <div class="nav-icon">📊</div>
-            <div class="nav-label">Dash</div>
+        <a href="{% url 'cart_view' %}" class="nav-item">
+            <div class="nav-icon">🛒</div>
+            <div class="nav-label">Cart</div>
         </a>
 
         <a href="{% url 'shopper_orders' %}" class="nav-item">
@@ -808,12 +613,6 @@ Purpose: Shopper product browsing marketplace template
             <div class="nav-label">Logout</div>
         </a>
     </nav>
-
-    <script>
-        document.getElementById("scrollToTopBtn").addEventListener("click", function () {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        });
-    </script>
 
     <!--Start of Tawk.to Script-->
     <script type="text/javascript">
