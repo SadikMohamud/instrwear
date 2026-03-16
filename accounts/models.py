@@ -47,7 +47,7 @@ class CustomUserManager(BaseUserManager):
         password : str
             User password
         role : str
-            Either 'shopper' or 'merchant'
+            One of: 'admin', 'shopper', or 'merchant'
         """
 
         # Email is required for authentication
@@ -76,6 +76,7 @@ class CustomUserManager(BaseUserManager):
         Superusers automatically receive:
         - admin panel access
         - full permissions
+        - admin role inside the InstrWear application
         """
 
         extra_fields.setdefault("is_staff", True)
@@ -85,7 +86,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(
             email=email,
             password=password,
-            role="merchant",  # admin is treated like merchant internally
+            role="admin",
             **extra_fields
         )
 
@@ -104,6 +105,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     # Role choices allow the platform to differentiate user types
     class Role(models.TextChoices):
+        ADMIN = "admin", "Admin"
         SHOPPER = "shopper", "Shopper"
         MERCHANT = "merchant", "Merchant"
 
@@ -135,8 +137,21 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # No additional required fields when creating superuser
     REQUIRED_FIELDS = []
 
+def save(self, *args, **kwargs):
+        """
+        Ensure Django superusers always use the admin role.
 
-    def __str__(self):
+        This keeps Django's built-in admin permissions aligned
+        with the app-level role used inside InstrWear.
+        """
+
+        if self.is_superuser:
+            self.role = self.Role.ADMIN
+            self.is_staff = True
+
+        super().save(*args, **kwargs)
+    
+def __str__(self):
         """
         String representation of the user.
         Shows full name if available, otherwise email.

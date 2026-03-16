@@ -1,40 +1,344 @@
-{% extends "base.html" %}
 {% load static %}
+<!--
+Author: Sadik Mohamud
+Project: InstrWear
+File: templates/accounts/register_shopper.html
+Purpose: Shopper registration page
+-->
 
-{% block title %}Register as Shopper{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSTRWEAR - REGISTER AS SHOPPER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        :root {
+            --bg: #FFFDF5;
+            --fg: #000000;
+            --accent: #FF6B6B;
+            --secondary: #FFD93D;
+            --muted: #C4B5FD;
+            --white: #FFFFFF;
+        }
 
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+        }
 
-{% block content %}
-<main class="iw-auth-page">
-  <section class="iw-auth-panel">
-    <header class="iw-auth-header">
-      <h1 class="iw-auth-title">Register as Shopper</h1>
-      <p class="iw-auth-subtitle">Create your shopper account and start discovering fashion.</p>
-    </header>
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(#000 1.5px, transparent 1.5px);
+            background-size: 30px 30px;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    <form method="post" class="iw-auth-form">
-      {% csrf_token %}
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 50px 40px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 16px 16px 0 0 #000;
+            transform: rotate(-1deg);
+        }
 
-      <div class="iw-field">
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" required>
-      </div>
+        .badge {
+            position: absolute;
+            top: -20px;
+            right: 40px;
+            background: var(--secondary);
+            border: 4px solid var(--fg);
+            padding: 8px 20px;
+            font-weight: 900;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transform: rotate(3deg);
+            box-shadow: 4px 4px 0 0 #000;
+        }
 
-      <div class="iw-field">
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" required>
-      </div>
+        .logo {
+            text-align: center;
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            line-height: 1;
+            text-decoration: none;
+            color: var(--fg);
+            display: block;
+        }
 
-      <div class="iw-auth-actions">
-        <button class="button button--primary" type="submit">Create Shopper Account</button>
-      </div>
-    </form>
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
 
-    <footer class="iw-auth-footer">
-      <p>Already have a shopper account? <a href="{% url 'login' %}?role=shopper">Login here</a></p>
-      <p><a href="{% url 'register_choice' %}">← Back to account choices</a></p>
-    </footer>
-  </section>
-</main>
-{% endblock %}
+        .messages {
+            margin-bottom: 24px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .message {
+            border: 4px solid var(--fg);
+            padding: 14px 16px;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 4px 4px 0 0 #000;
+            background: var(--white);
+        }
+
+        .message.error {
+            background: #ffe3e3;
+        }
+
+        .message.success {
+            background: #dcfce7;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .form-input {
+            width: 100%;
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 16px 18px;
+            font-size: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            transition: all 0.2s;
+            box-shadow: 4px 4px 0 0 #000;
+        }
+
+        .form-input:focus {
+            outline: none;
+            background: var(--secondary);
+            box-shadow: 6px 6px 0 0 #000;
+        }
+
+        .form-input::placeholder {
+            color: rgba(0, 0, 0, 0.3);
+            font-weight: 500;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 20px;
+            background: var(--accent);
+            border: 4px solid var(--fg);
+            color: var(--white);
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.1s;
+            margin-top: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            box-shadow: 8px 8px 0 0 #000;
+            letter-spacing: 0.1em;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-4px);
+            box-shadow: 12px 12px 0 0 #000;
+        }
+
+        .btn-submit:active {
+            transform: translateY(2px) translateX(2px);
+            box-shadow: 2px 2px 0 0 #000;
+        }
+
+        .footer-section {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 4px solid var(--fg);
+        }
+
+        .footer-text {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .footer-link {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--fg);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .footer-link:hover {
+            color: var(--accent);
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 15px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--fg);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 30px;
+                transform: rotate(0deg);
+            }
+
+            .logo {
+                font-size: 36px;
+            }
+
+            .badge {
+                right: 20px;
+                top: -15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="badge">SHOPPER</div>
+
+        <a href="{% url 'landing' %}" class="logo">INSTRWEAR</a>
+        <p class="subtitle">Register as Shopper</p>
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" id="registerForm">
+            {% csrf_token %}
+            <input type="hidden" name="role" value="shopper">
+
+            <div class="form-group">
+                <label class="form-label" for="email">Email Address</label>
+                <input
+                    id="email"
+                    type="email"
+                    class="form-input"
+                    name="email"
+                    placeholder="you@example.com"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input
+                    id="password"
+                    type="password"
+                    class="form-input"
+                    name="password"
+                    placeholder="••••••••"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="confirm_password">Confirm Password</label>
+                <input
+                    id="confirm_password"
+                    type="password"
+                    class="form-input"
+                    name="confirm_password"
+                    placeholder="••••••••"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn-submit">CREATE SHOPPER ACCOUNT →</button>
+        </form>
+
+        <div class="footer-section">
+            <p class="footer-text">
+                Already have a shopper account?
+                <a href="{% url 'login' %}?role=shopper" class="footer-link">LOGIN HERE</a>
+            </p>
+            
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match.');
+            }
+        });
+    </script>
+
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/69b4593c6ccaea1c3830fc4f/1jjk7p5fv';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!--End of Tawk.to Script-->
+</body>
+</html>

@@ -1,82 +1,315 @@
-{% extends "base.html" %}
-{% block title %}Complete Your Profile{% endblock %}
+{% load static %}
+<!--
+Author: Sadik Mohamud
+Project: InstrWear
+File: templates/accounts/register_choice.html
+Purpose: Account type selection page for shopper and merchant registration
+-->
 
-{% block content %}
-<main class="iw-auth-page">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSTRWEAR - CREATE AN ACCOUNT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<section class="iw-auth-panel iw-auth-panel--wide">
+        :root {
+            --bg: #FFFDF5;
+            --fg: #000000;
+            --accent: #FF6B6B;
+            --secondary: #FFD93D;
+            --muted: #C4B5FD;
+            --white: #FFFFFF;
+        }
 
-<header class="iw-auth-header">
-<h1 class="iw-auth-title">Complete Your Shopper Profile</h1>
-<p class="iw-auth-subtitle">
-Set up your delivery details so you can start ordering instantly.
-</p>
-</header>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+        }
 
-<form method="post" class="iw-auth-form">
-{% csrf_token %}
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(#000 1.5px, transparent 1.5px);
+            background-size: 30px 30px;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-<h2 class="iw-form-section">Personal Details</h2>
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 50px 40px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 16px 16px 0px 0px #000;
+        }
 
-<div class="iw-form-row">
+        .logo {
+            text-align: center;
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            line-height: 1;
+            text-decoration: none;
+            color: var(--fg);
+            display: block;
+        }
 
-<div class="iw-field">
-<label for="first_name">First name</label>
-<input id="first_name" name="first_name" required>
-</div>
+        .title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
 
-<div class="iw-field">
-<label for="last_name">Last name</label>
-<input id="last_name" name="last_name" required>
-</div>
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 50px;
+            color: rgba(0, 0, 0, 0.7);
+        }
 
-</div>
+        .role-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
 
-<div class="iw-field">
-<label for="phone">Mobile number</label>
-<input id="phone" name="phone" placeholder="+44 7XXX XXX XXX">
-</div>
+        .role-card {
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 40px 30px;
+            transition: all 0.1s;
+            box-shadow: 8px 8px 0px 0px #000;
+            display: flex;
+            flex-direction: column;
+        }
 
-<h2 class="iw-form-section">Delivery Address</h2>
+        .role-card:nth-child(1) {
+            transform: rotate(-1deg);
+        }
 
-<div class="iw-field">
-<label for="address_line1">Address line 1</label>
-<input id="address_line1" name="address_line1" required>
-</div>
+        .role-card:nth-child(2) {
+            transform: rotate(1deg);
+        }
 
-<div class="iw-field">
-<label for="address_line2">Address line 2</label>
-<input id="address_line2" name="address_line2">
-</div>
+        .role-card:hover {
+            transform: translateY(-6px) rotate(0deg);
+            box-shadow: 14px 14px 0px 0px #000;
+        }
 
-<div class="iw-form-row">
+        .role-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--secondary);
+            border: 4px solid var(--fg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 25px;
+            box-shadow: 4px 4px 0px 0px #000;
+        }
 
-<div class="iw-field">
-<label for="city">Town / City</label>
-<input id="city" name="city" required>
-</div>
+        .role-card:nth-child(2) .role-icon {
+            background: var(--muted);
+        }
 
-<div class="iw-field">
-<label for="postcode">Postcode</label>
-<input id="postcode" name="postcode" placeholder="SW1A 1AA" required>
-</div>
+        .role-title {
+            font-size: 28px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: -0.01em;
+        }
 
-</div>
+        .role-desc {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.6;
+            color: rgba(0, 0, 0, 0.7);
+            text-align: center;
+            margin-bottom: 30px;
+            flex: 1;
+        }
 
-<div class="iw-field">
-<label for="delivery_notes">Delivery notes (optional)</label>
-<textarea id="delivery_notes" name="delivery_notes"></textarea>
-</div>
+        .btn-role {
+            width: 100%;
+            padding: 18px;
+            background: var(--accent);
+            border: 4px solid var(--fg);
+            color: var(--white);
+            font-size: 16px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-family: 'Space Grotesk', sans-serif;
+            box-shadow: 6px 6px 0px 0px #000;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
 
-<div class="iw-auth-actions">
-<button class="button button--primary" type="submit">
-Continue to Dashboard
-</button>
-</div>
+        .btn-role:hover {
+            transform: translateY(-3px);
+            box-shadow: 9px 9px 0px 0px #000;
+        }
 
-</form>
+        .btn-role:active {
+            transform: translateY(2px) translateX(2px);
+            box-shadow: 2px 2px 0px 0px #000;
+        }
 
-</section>
+        .footer-section {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 4px solid var(--fg);
+        }
 
-</main>
-{% endblock %}
+        .footer-text {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .footer-link {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--fg);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .footer-link:hover {
+            color: var(--accent);
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 15px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--fg);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 25px;
+            }
+
+            .logo {
+                font-size: 36px;
+            }
+
+            .title {
+                font-size: 28px;
+            }
+
+            .role-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .role-card {
+                transform: rotate(0deg) !important;
+            }
+
+            .role-card:hover {
+                transform: translateY(-6px) !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'landing' %}" class="logo">INSTRWEAR</a>
+        <h1 class="title">CREATE AN ACCOUNT</h1>
+        <p class="subtitle">Choose how you want to use InstrWear</p>
+
+        <div class="role-grid">
+            <article class="role-card">
+                <div class="role-icon">🛍️</div>
+                <h2 class="role-title">SHOPPER</h2>
+                <p class="role-desc">
+                    Browse fashion, discover local brands, and get your fit delivered fast.
+                </p>
+                <a href="{% url 'register_shopper' %}" class="btn-role">
+                    REGISTER AS SHOPPER →
+                </a>
+            </article>
+
+            <article class="role-card">
+                <div class="role-icon">🏪</div>
+                <h2 class="role-title">MERCHANT</h2>
+                <p class="role-desc">
+                    Open your storefront, upload products, and start selling.
+                </p>
+                <a href="{% url 'register_merchant' %}" class="btn-role">
+                    REGISTER AS MERCHANT →
+                </a>
+            </article>
+        </div>
+
+        <footer class="footer-section">
+            <p class="footer-text">
+                Already have an account?
+                <a href="{% url 'login' %}" class="footer-link">LOG IN HERE</a>
+            </p>
+            <a href="{% url 'landing' %}" class="back-link">← BACK TO HOME</a>
+        </footer>
+    </div>
+
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/69b4593c6ccaea1c3830fc4f/1jjk7p5fv';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!--End of Tawk.to Script-->
+</body>
+</html>

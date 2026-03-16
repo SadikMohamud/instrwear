@@ -1,95 +1,360 @@
-{% extends "base.html" %}
-{% block title %}Set Up Your Store{% endblock %}
+{% load static %}
+<!--
+Author: Sadik Mohamud
+Project: InstrWear
+File: templates/merchant/onboarding.html
+Purpose: Merchant onboarding page
+-->
 
-{% block content %}
-<main class="iw-auth-page">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INSTRWEAR - MERCHANT ONBOARDING</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
 
-<section class="iw-auth-panel iw-auth-panel--wide">
+<style>
+/* --- SAME CSS YOU PROVIDED (unchanged) --- */
+*{margin:0;padding:0;box-sizing:border-box;}
 
-<header class="iw-auth-header">
-<h1 class="iw-auth-title">Set Up Your Store</h1>
-<p class="iw-auth-subtitle">
-Tell us about your business so customers can discover your store.
-</p>
-</header>
+:root{
+--bg:#FFFDF5;
+--fg:#000000;
+--accent:#FF6B6B;
+--secondary:#FFD93D;
+--muted:#C4B5FD;
+--white:#FFFFFF;
+}
 
-<form method="post" class="iw-auth-form">
+body{
+font-family:'Space Grotesk',sans-serif;
+background:var(--bg);
+color:var(--fg);
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:40px 20px;
+position:relative;
+}
+
+body::before{
+content:'';
+position:fixed;
+top:0;left:0;right:0;bottom:0;
+background-size:40px 40px;
+background-image:
+linear-gradient(to right,rgba(0,0,0,.05)1px,transparent 1px),
+linear-gradient(to bottom,rgba(0,0,0,.05)1px,transparent 1px);
+pointer-events:none;
+z-index:0;
+}
+
+.container{
+max-width:600px;
+width:100%;
+background:var(--white);
+border:4px solid var(--fg);
+padding:50px 40px;
+position:relative;
+z-index:1;
+box-shadow:16px 16px 0 #000;
+transform:rotate(1deg);
+}
+
+.badge{
+position:absolute;
+top:-25px;
+right:50px;
+background:var(--secondary);
+border:4px solid var(--fg);
+padding:10px 24px;
+font-weight:900;
+font-size:14px;
+text-transform:uppercase;
+letter-spacing:.1em;
+transform:rotate(-5deg);
+box-shadow:6px 6px 0 #000;
+}
+
+.logo{
+text-align:center;
+font-size:48px;
+font-weight:900;
+margin-bottom:10px;
+letter-spacing:-.05em;
+text-transform:uppercase;
+line-height:1;
+text-decoration:none;
+color:var(--fg);
+display:block;
+}
+
+.subtitle{
+text-align:center;
+font-size:16px;
+font-weight:700;
+margin-bottom:40px;
+text-transform:uppercase;
+letter-spacing:.15em;
+background:var(--secondary);
+padding:8px;
+border:4px solid var(--fg);
+box-shadow:4px 4px 0 #000;
+}
+
+.messages{
+margin-bottom:20px;
+}
+
+.message{
+border:4px solid var(--fg);
+padding:12px;
+font-weight:700;
+margin-bottom:10px;
+background:#ffe3e3;
+box-shadow:4px 4px 0 #000;
+}
+
+.profile-upload{
+display:flex;
+flex-direction:column;
+align-items:center;
+margin-bottom:40px;
+}
+
+.profile-pic{
+width:160px;
+height:160px;
+background:var(--muted);
+border:4px solid var(--fg);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:70px;
+cursor:pointer;
+position:relative;
+overflow:hidden;
+box-shadow:8px 8px 0 #000;
+transform:rotate(-2deg);
+}
+
+.profile-pic img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.upload-label{
+margin-top:20px;
+font-size:14px;
+font-weight:900;
+cursor:pointer;
+text-transform:uppercase;
+letter-spacing:.1em;
+padding:10px 20px;
+background:var(--accent);
+color:var(--white);
+border:4px solid var(--fg);
+box-shadow:6px 6px 0 #000;
+}
+
+#profileImageInput{display:none;}
+
+.form-group{margin-bottom:25px;}
+
+.form-label{
+display:block;
+font-size:12px;
+font-weight:900;
+margin-bottom:8px;
+text-transform:uppercase;
+letter-spacing:.15em;
+}
+
+.form-input{
+width:100%;
+border:4px solid var(--fg);
+padding:16px;
+font-family:'Space Grotesk',sans-serif;
+font-weight:700;
+box-shadow:4px 4px 0 #000;
+}
+
+.form-row{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+.address-section{
+background:var(--secondary);
+border:4px solid var(--fg);
+padding:30px;
+margin-bottom:30px;
+box-shadow:12px 12px 0 #000;
+}
+
+.section-title{
+font-size:20px;
+font-weight:900;
+margin-bottom:25px;
+text-transform:uppercase;
+letter-spacing:.1em;
+background:white;
+padding:8px 12px;
+border:4px solid var(--fg);
+display:inline-block;
+box-shadow:4px 4px 0 #000;
+}
+
+.btn-submit{
+width:100%;
+padding:20px;
+background:var(--accent);
+border:4px solid var(--fg);
+color:white;
+font-size:18px;
+font-weight:900;
+text-transform:uppercase;
+letter-spacing:.15em;
+cursor:pointer;
+box-shadow:12px 12px 0 #000;
+}
+
+.btn-submit:hover{
+transform:translateY(-5px);
+box-shadow:17px 17px 0 #000;
+}
+
+.back-link{
+display:block;
+margin-top:18px;
+text-align:center;
+font-size:12px;
+font-weight:700;
+color:var(--fg);
+text-decoration:none;
+text-transform:uppercase;
+letter-spacing:.1em;
+}
+
+@media(max-width:768px){
+.container{transform:rotate(0)}
+.form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<div class="badge">BUSINESS</div>
+
+<a href="{% url 'landing' %}" class="logo">INSTRWEAR</a>
+<p class="subtitle">Merchant Onboarding</p>
+
+{% if messages %}
+<div class="messages">
+{% for message in messages %}
+<div class="message">{{ message }}</div>
+{% endfor %}
+</div>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
 {% csrf_token %}
 
-<h2 class="iw-form-section">Business Information</h2>
-
-<div class="iw-field">
-<label for="store_name">Store name</label>
-<input id="store_name" name="store_name" required>
+<!-- LOGO -->
+<div class="profile-upload">
+<div class="profile-pic" onclick="document.getElementById('profileImageInput').click()">
+<span id="profilePlaceholder">🏪</span>
+<img id="profilePreview" style="display:none;">
 </div>
 
-<div class="iw-field">
-<label for="business_phone">Business phone number</label>
-<input id="business_phone" name="business_phone" placeholder="+44 7XXX XXX XXX">
+<label class="upload-label" for="profileImageInput">UPLOAD LOGO</label>
+<input type="file" name="logo" id="profileImageInput" accept="image/*">
 </div>
 
-<div class="iw-field">
-<label for="store_description">Store description</label>
-<textarea id="store_description" name="store_description"></textarea>
+<!-- BUSINESS INFO -->
+
+<div class="form-group">
+<label class="form-label">Business Name</label>
+<input class="form-input" name="business_name" required>
 </div>
 
-<h2 class="iw-form-section">Store Address</h2>
-
-<div class="iw-field">
-<label for="store_address1">Address line 1</label>
-<input id="store_address1" name="store_address1" required>
+<div class="form-group">
+<label class="form-label">Owner Name</label>
+<input class="form-input" name="merchant_name" required>
 </div>
 
-<div class="iw-field">
-<label for="store_address2">Address line 2</label>
-<input id="store_address2" name="store_address2">
+<div class="form-group">
+<label class="form-label">Business Phone</label>
+<input class="form-input" name="phone" required>
 </div>
 
-<div class="iw-form-row">
+<!-- ADDRESS -->
 
-<div class="iw-field">
-<label for="store_city">Town / City</label>
-<input id="store_city" name="store_city" required>
+<div class="address-section">
+
+<h3 class="section-title">📍 BUSINESS LOCATION</h3>
+
+<div class="form-group">
+<label class="form-label">Shop Number/Name</label>
+<input class="form-input" name="house" required>
 </div>
 
-<div class="iw-field">
-<label for="store_postcode">Postcode</label>
-<input id="store_postcode" name="store_postcode" placeholder="SW1A 1AA" required>
+<div class="form-group">
+<label class="form-label">Street</label>
+<input class="form-input" name="street" required>
 </div>
 
+<div class="form-group">
+<label class="form-label">Town/City</label>
+<input class="form-input" name="city" required>
 </div>
 
-<h2 class="iw-form-section">Business Settings</h2>
+<div class="form-row">
 
-<div class="iw-form-row">
-
-<div class="iw-field">
-<label for="delivery_radius">Delivery radius (km)</label>
-<input id="delivery_radius" name="delivery_radius" type="number" value="5">
+<div class="form-group">
+<label class="form-label">County</label>
+<input class="form-input" name="county">
 </div>
 
-<div class="iw-field">
-<label for="store_category">Store category</label>
-<select id="store_category" name="store_category">
-<option>Streetwear</option>
-<option>Luxury</option>
-<option>Vintage</option>
-<option>Footwear</option>
-<option>Accessories</option>
-</select>
+<div class="form-group">
+<label class="form-label">Postcode</label>
+<input class="form-input" name="postcode" required>
 </div>
 
 </div>
 
-<div class="iw-auth-actions">
-<button class="button button--primary" type="submit">
-Finish Setup
-</button>
 </div>
+
+<button type="submit" class="btn-submit">LAUNCH STORE →</button>
 
 </form>
 
-</section>
+<a href="{% url 'merchant_dashboard' %}" class="back-link">
+← BACK TO DASHBOARD
+</a>
 
-</main>
-{% endblock %}
+</div>
+
+<script>
+document.getElementById('profileImageInput').addEventListener('change',function(e){
+const file=e.target.files[0];
+if(file){
+const reader=new FileReader();
+reader.onload=function(ev){
+document.getElementById('profilePreview').src=ev.target.result;
+document.getElementById('profilePreview').style.display='block';
+document.getElementById('profilePlaceholder').style.display='none';
+}
+reader.readAsDataURL(file);
+}
+});
+</script>
+
+</body>
+</html>

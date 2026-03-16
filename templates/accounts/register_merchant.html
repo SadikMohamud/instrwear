@@ -1,40 +1,285 @@
-{% extends "base.html" %}
-{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSTRWEAR - REGISTER AS MERCHANT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-{% block title %}Register as Merchant{% endblock %}
+        :root {
+            --bg: #FFFDF5;
+            --fg: #000000;
+            --accent: #FF6B6B;
+            --secondary: #FFD93D;
+            --muted: #C4B5FD;
+            --white: #FFFFFF;
+        }
 
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+        }
 
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+            pointer-events: none;
+            z-index: 0;
+        }
 
-{% block content %}
-<main class="iw-auth-page">
-  <section class="iw-auth-panel">
-    <header class="iw-auth-header">
-      <h1 class="iw-auth-title">Register as Merchant</h1>
-      <p class="iw-auth-subtitle">Create your merchant account and start building your storefront.</p>
-    </header>
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 50px 40px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 16px 16px 0px 0px #000;
+            transform: rotate(1deg);
+        }
 
-    <form method="post" class="iw-auth-form">
-      {% csrf_token %}
+        .badge {
+            position: absolute;
+            top: -25px;
+            right: 50px;
+            background: var(--muted);
+            border: 4px solid var(--fg);
+            padding: 10px 24px;
+            font-weight: 900;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transform: rotate(-5deg);
+            box-shadow: 6px 6px 0px 0px #000;
+        }
 
-      <div class="iw-field">
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" required>
-      </div>
+        .logo {
+            text-align: center;
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            line-height: 1;
+        }
 
-      <div class="iw-field">
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" required>
-      </div>
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            background: var(--secondary);
+            padding: 8px;
+            border: 4px solid var(--fg);
+            box-shadow: 4px 4px 0px 0px #000;
+        }
 
-      <div class="iw-auth-actions">
-        <button class="button button--primary" type="submit">Create Merchant Account</button>
-      </div>
-    </form>
+        .form-group {
+            margin-bottom: 25px;
+        }
 
-    <footer class="iw-auth-footer">
-      <p>Already have a merchant account? <a href="{% url 'login' %}?role=merchant">Login here</a></p>
-      <p><a href="{% url 'register_choice' %}">← Back to account choices</a></p>
-    </footer>
-  </section>
-</main>
-{% endblock %}
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .form-input {
+            width: 100%;
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 16px 18px;
+            font-size: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            transition: all 0.2s;
+            box-shadow: 4px 4px 0px 0px #000;
+        }
+
+        .form-input:focus {
+            outline: none;
+            background: var(--muted);
+            box-shadow: 6px 6px 0px 0px #000;
+        }
+
+        .form-input::placeholder {
+            color: rgba(0, 0, 0, 0.3);
+            font-weight: 500;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 20px;
+            background: var(--accent);
+            border: 4px solid var(--fg);
+            color: var(--white);
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.1s;
+            margin-top: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            box-shadow: 8px 8px 0px 0px #000;
+            letter-spacing: 0.1em;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-4px);
+            box-shadow: 12px 12px 0px 0px #000;
+        }
+
+        .btn-submit:active {
+            transform: translateY(2px) translateX(2px);
+            box-shadow: 2px 2px 0px 0px #000;
+        }
+
+        .footer-section {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 4px solid var(--fg);
+        }
+
+        .footer-text {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .footer-link {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--fg);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .footer-link:hover {
+            color: var(--accent);
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 15px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--fg);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 30px;
+                transform: rotate(0deg);
+            }
+
+            .logo {
+                font-size: 36px;
+            }
+
+            .badge {
+                right: 20px;
+                top: -20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="badge">MERCHANT</div>
+        
+        <div class="logo">INSTRWEAR</div>
+        <p class="subtitle">Register as Merchant</p>
+
+        <form method="post" id="registerForm">
+            <input type="hidden" name="role" value="merchant">
+
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" name="email" placeholder="store@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" name="password1" placeholder="••••••••" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" class="form-input" name="password2" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-submit">CREATE MERCHANT ACCOUNT →</button>
+        </form>
+
+        <div class="footer-section">
+            <p class="footer-text">
+                Already have a merchant account? 
+                <a href="login-neo.html?role=merchant" class="footer-link">LOGIN HERE</a>
+            </p>
+            
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const password1 = formData.get('password1');
+            const password2 = formData.get('password2');
+
+            if (password1 !== password2) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            // Django backend: POST /api/auth/register/
+            // Creates USER with role='merchant'
+            // Redirects to merchant-onboarding-neo.html
+            
+            console.log('Merchant registration:', {
+                email: formData.get('email'),
+                role: 'merchant'
+            });
+
+            window.location.href = 'merchant-onboarding-neo.html';
+        });
+    </script>
+</body>
+</html>

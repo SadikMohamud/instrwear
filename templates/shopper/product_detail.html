@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<main class="dashboard-shell">
+  <section class="dashboard-card" style="max-width: 900px; margin: 0 auto;">
+    {% if product.image %}
+      <img
+        src="{{ product.image.url }}"
+        alt="{{ product.name }}"
+        style="width:100%; height:380px; object-fit:cover; border-radius:20px; margin-bottom:20px;"
+      >
+    {% endif %}
+
+    <p class="dashboard-eyebrow">
+      {% if product.category %}{{ product.category.name }}{% else %}Product{% endif %}
+    </p>
+
+    <h1 style="margin-bottom: 14px;">{{ product.name }}</h1>
+
+    <p style="margin-bottom: 18px; color: rgba(255,255,255,0.75); line-height: 1.8;">
+      {{ product.description|default:"No description available." }}
+    </p>
+
+    <p style="font-size: 24px; font-weight: 700; margin-bottom: 10px;">
+      £{{ product.price }}
+    </p>
+
+    <p style="margin-bottom: 24px; color: rgba(255,255,255,0.65);">
+      Stock: {{ product.stock }}
+    </p>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      <button class="button button--primary" type="button">Add to Cart</button>
+      <a class="button button--primary" href="{% url 'shopper_product_list' %}">Back to Shop</a>
+    </div>
+  </section>
+</main>
+
+<!--
+Author: Sadik Mohamud
+Project: InstrWear
+File: templates/shopper/product_detail.html
+Purpose: Shopper single product detail page
+-->
+{% endblock %}

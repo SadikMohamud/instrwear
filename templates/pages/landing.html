@@ -2,73 +2,951 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>InstrWear - Fashion Delivered</title>
-  <link rel="stylesheet" href="{% static 'css/landing.css' %}" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSTRWEAR - FASHION DELIVERED FAST</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  
+        :root {
+            --bg: #FFFDF5;
+            --fg: #000000;
+            --accent: #FF6B6B;
+            --secondary: #FFD93D;
+            --muted: #C4B5FD;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(#000 1.5px, transparent 1.5px);
+            background-size: 25px 25px;
+            opacity: 0.02;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .header {
+            background: var(--white);
+            border-bottom: 4px solid var(--fg);
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 0px 0px #000;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            color: var(--fg);
+            padding: 10px 16px;
+            transition: all 0.1s;
+            border: 4px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: var(--secondary);
+            border: 4px solid var(--fg);
+            box-shadow: 4px 4px 0px 0px #000;
+        }
+
+        .btn-header {
+            padding: 12px 24px;
+            background: var(--accent);
+            border: 4px solid var(--fg);
+            color: var(--white);
+            font-size: 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-family: 'Space Grotesk', sans-serif;
+            box-shadow: 4px 4px 0px 0px #000;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-header:hover {
+            transform: translateY(-2px);
+            box-shadow: 6px 6px 0px 0px #000;
+        }
+
+        .btn-header:active {
+            transform: translateY(2px) translateX(2px);
+            box-shadow: none;
+        }
+
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, var(--bg) 0%, var(--secondary) 100%);
+            border-bottom: 4px solid var(--fg);
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 80px 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--accent);
+            border: 4px solid var(--fg);
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 30px;
+            box-shadow: 6px 6px 0px 0px #000;
+            transform: rotate(-2deg);
+            color: var(--white);
+        }
+
+        .hero-title {
+            font-size: 96px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            line-height: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .hero-title-line {
+            display: block;
+        }
+
+        .hero-title-line:nth-child(1) {
+            color: var(--fg);
+        }
+
+        .hero-title-line:nth-child(2) {
+            color: var(--accent);
+            text-shadow: 4px 4px 0px #000;
+            transform: rotate(-1deg);
+            display: inline-block;
+        }
+
+        .hero-title-line:nth-child(3) {
+            color: var(--fg);
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.5;
+            margin-bottom: 40px;
+            max-width: 500px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            padding: 20px 40px;
+            background: var(--accent);
+            border: 4px solid var(--fg);
+            color: var(--white);
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-family: 'Space Grotesk', sans-serif;
+            box-shadow: 8px 8px 0px 0px #000;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 12px 12px 0px 0px #000;
+        }
+
+        .btn-primary:active {
+            transform: translateY(2px) translateX(2px);
+            box-shadow: 2px 2px 0px 0px #000;
+        }
+
+        .btn-secondary {
+            padding: 20px 40px;
+            background: var(--white);
+            border: 4px solid var(--fg);
+            color: var(--fg);
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-family: 'Space Grotesk', sans-serif;
+            box-shadow: 8px 8px 0px 0px #000;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: var(--muted);
+            transform: translateY(-4px);
+            box-shadow: 12px 12px 0px 0px #000;
+        }
+
+        .btn-secondary:active {
+            transform: translateY(2px) translateX(2px);
+            box-shadow: 2px 2px 0px 0px #000;
+        }
+
+        .hero-visual {
+            position: relative;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-shape {
+            position: absolute;
+            border: 4px solid var(--fg);
+            box-shadow: 8px 8px 0px 0px #000;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            top: 50px;
+            left: 50px;
+            transform: rotate(12deg);
+            z-index: 1;
+        }
+
+        .shape-2 {
+            width: 250px;
+            height: 250px;
+            background: var(--muted);
+            bottom: 100px;
+            right: 80px;
+            transform: rotate(-8deg);
+            z-index: 2;
+        }
+
+        .shape-3 {
+            width: 200px;
+            height: 200px;
+            background: var(--secondary);
+            top: 150px;
+            right: 50px;
+            transform: rotate(25deg);
+            border-radius: 50%;
+            z-index: 3;
+        }
+
+        .hero-emoji {
+            position: absolute;
+            font-size: 80px;
+            z-index: 4;
+        }
+
+        .emoji-1 { top: 100px; left: 100px; }
+        .emoji-2 { top: 250px; right: 150px; }
+        .emoji-3 { bottom: 150px; left: 200px; }
+
+        .stats-bar {
+            background: var(--fg);
+            color: var(--white);
+            padding: 40px;
+            border-top: 4px solid var(--fg);
+            border-bottom: 4px solid var(--fg);
+            box-shadow: 0 8px 0px 0px #000;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            color: var(--secondary);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .features {
+            padding: 120px 40px;
+            background: var(--bg);
+        }
+
+        .section-header {
+            max-width: 800px;
+            margin: 0 auto 80px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 72px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .section-subtitle {
+            font-size: 20px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 40px;
+            transition: all 0.1s;
+            box-shadow: 8px 8px 0px 0px #000;
+            position: relative;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 14px 14px 0px 0px #000;
+        }
+
+        .feature-card:nth-child(1) { transform: rotate(1deg); }
+        .feature-card:nth-child(2) { transform: rotate(-1deg); }
+        .feature-card:nth-child(3) { transform: rotate(0.5deg); }
+        .feature-card:nth-child(4) { transform: rotate(-0.5deg); }
+        .feature-card:nth-child(5) { transform: rotate(1deg); }
+        .feature-card:nth-child(6) { transform: rotate(-1deg); }
+
+        .feature-card:nth-child(1):hover { transform: rotate(1deg) translateY(-6px); }
+        .feature-card:nth-child(2):hover { transform: rotate(-1deg) translateY(-6px); }
+        .feature-card:nth-child(3):hover { transform: rotate(0.5deg) translateY(-6px); }
+        .feature-card:nth-child(4):hover { transform: rotate(-0.5deg) translateY(-6px); }
+        .feature-card:nth-child(5):hover { transform: rotate(1deg) translateY(-6px); }
+        .feature-card:nth-child(6):hover { transform: rotate(-1deg) translateY(-6px); }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--secondary);
+            border: 4px solid var(--fg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 25px;
+            box-shadow: 4px 4px 0px 0px #000;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            letter-spacing: -0.01em;
+        }
+
+        .feature-desc {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.6;
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .how-it-works {
+            padding: 120px 40px;
+            background: var(--muted);
+            border-top: 4px solid var(--fg);
+            border-bottom: 4px solid var(--fg);
+        }
+
+        .tabs {
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .tab {
+            padding: 20px 40px;
+            background: var(--white);
+            border: 4px solid var(--fg);
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.1s;
+            box-shadow: 6px 6px 0px 0px #000;
+            letter-spacing: 0.1em;
+        }
+
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 8px 8px 0px 0px #000;
+        }
+
+        .tab.active {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        .steps-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .steps-container.active {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .step-card {
+            background: var(--white);
+            border: 4px solid var(--fg);
+            padding: 30px;
+            box-shadow: 8px 8px 0px 0px #000;
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--secondary);
+            border: 4px solid var(--fg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            box-shadow: 4px 4px 0px 0px #000;
+            position: absolute;
+            top: -30px;
+            left: 30px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-top: 40px;
+            margin-bottom: 15px;
+        }
+
+        .step-desc {
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.6;
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .cta-section {
+            padding: 120px 40px;
+            background: var(--accent);
+            border-top: 4px solid var(--fg);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-title {
+            font-size: 72px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            line-height: 1;
+            margin-bottom: 30px;
+            color: var(--white);
+            text-shadow: 6px 6px 0px #000;
+        }
+
+        .cta-subtitle {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 50px;
+            color: var(--fg);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-cta {
+            padding: 24px 48px;
+            background: var(--fg);
+            border: 4px solid var(--fg);
+            color: var(--white);
+            font-size: 20px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-family: 'Space Grotesk', sans-serif;
+            box-shadow: 10px 10px 0px 0px #000;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-5px);
+            box-shadow: 15px 15px 0px 0px #000;
+        }
+
+        .btn-cta:active {
+            transform: translateY(2px) translateX(2px);
+            box-shadow: 3px 3px 0px 0px #000;
+        }
+
+        .footer {
+            background: var(--fg);
+            color: var(--white);
+            padding: 80px 40px 40px;
+            border-top: 4px solid var(--fg);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand {
+            font-size: 32px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .footer-desc {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer-title {
+            font-size: 16px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-link {
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.1s;
+        }
+
+        .footer-link:hover {
+            color: var(--secondary);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 40px;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        @media (max-width: 968px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .hero-visual {
+                height: 400px;
+            }
+
+            .hero-title {
+                font-size: 64px;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card {
+                transform: rotate(0deg) !important;
+            }
+
+            .feature-card:hover {
+                transform: translateY(-6px) !important;
+            }
+
+            .steps-container.active {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .nav {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero-title {
+                font-size: 48px;
+            }
+
+            .section-title {
+                font-size: 48px;
+            }
+
+            .cta-title {
+                font-size: 48px;
+            }
+        }
+    </style>
 </head>
 <body>
-  {% if messages %}
-    <aside class="messages" aria-live="polite" aria-atomic="true">
-      {% for message in messages %}
-        <p class="message {{ message.tags }}">{{ message }}</p>
-      {% endfor %}
-    </aside>
-  {% endif %}
+    <header class="header">
+        <div class="logo">INSTRWEAR</div>
+        <nav class="nav">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#how-it-works" class="nav-link">How It Works</a>
+           <a href="{% url 'login' %}" class="btn-header">LOG IN</a>
+        </nav>
+    </header>
 
-  <header class="site-header hero">
-    <div class="hero__media" id="videoBackground" aria-hidden="true">
-      <video autoplay muted loop playsinline>
-        <source src="{% static 'video/Fresh_Fits.mp4' %}" type="video/mp4" />
-      </video>
-    </div>
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">🔥 LONDON'S FASTEST FASHION DELIVERY</div>
+                <h1 class="hero-title">
+                    <span class="hero-title-line">FASHION</span>
+                    <span class="hero-title-line">DELIVERED</span>
+                    <span class="hero-title-line">IN MINUTES</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Order from your favorite local boutiques and get fresh fashion delivered to your door faster than you can say "outfit emergency."
+                </p>
+                <div class="hero-cta">
+                    <a href="{% url 'register_shopper' %}" class="btn-primary">START SHOPPING →</a>
+                    <a href="{% url 'register_merchant' %}" class="btn-secondary">LIST YOUR STORE</a>
+                </div>
+            </div>
 
-    <div class="hero__overlay" id="videoOverlay" aria-hidden="true"></div>
-
-    <nav class="site-nav" aria-label="Primary">
-      <a class="site-brand" href="/">InstrWear</a>
-
-      <ul class="site-nav__list">
-
-        {% if request.user.is_authenticated %}
-          {% if request.user.is_staff or request.user.is_superuser %}
-            <li><a class="site-nav__link site-nav__pill" href="/admin/">Admin</a></li>
-          {% endif %}
-
-          {% if request.user.role == "merchant" %}
-            <li><a class="site-nav__link site-nav__pill" href="/merchant/dashboard/">Dashboard</a></li>
-          {% else %}
-            <li><a class="site-nav__link site-nav__pill" href="/shopper/dashboard/">Dashboard</a></li>
-          {% endif %}
-
-          <li><a class="site-nav__link site-nav__pill" href="/accounts/logout/">Logout</a></li>
-        {% else %}
-          <li><a class="site-nav__link site-nav__pill" href="/accounts/login/?role=shopper">Login</a></li>
-          <li><a class="site-nav__link site-nav__pill" href="/accounts/register/">Register</a></li>
-        {% endif %}
-      </ul>
-    </nav>
-
-    <main class="site-main">
-      <section class="hero__content" id="heroContent" aria-labelledby="hero-title">
-        <div class="hero__inner">
-          <h1 class="hero__title" id="hero-title">InstrWear</h1>
-          <p class="hero__subtitle">Fashion Delivered</p>
-
-          <p class="hero__description">
-            Discover premium styles, shop from local brands, and get your fit delivered fast.
-            Merchants grow with a storefront built for conversion.
-          </p>
-
-          <p class="hero__actions">
-            <a class="button button--primary" href="{% url 'register_choice' %}">Get Started</a>
-          </p>
+            <div class="hero-visual">
+                <div class="hero-shape shape-1"></div>
+                <div class="hero-shape shape-2"></div>
+                <div class="hero-shape shape-3"></div>
+                <div class="hero-emoji emoji-1">👕</div>
+                <div class="hero-emoji emoji-2">👗</div>
+                <div class="hero-emoji emoji-3">👟</div>
+            </div>
         </div>
-      </section>
-    </main>
-  </header>
-<script src="{% static 'js/landing.js' %}"></script>
+    </section>
+
+    <section class="stats-bar">
+        <div class="stats-container">
+            <div class="stat">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Local Stores</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">15min</div>
+                <div class="stat-label">Avg Delivery</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">Happy Shoppers</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">4.9★</div>
+                <div class="stat-label">Customer Rating</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2 class="section-title">WHY INSTRWEAR?</h2>
+            <p class="section-subtitle">The smartest way to shop local fashion in London</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">LIGHTNING FAST</h3>
+                <p class="feature-desc">Get your order in as little as 15 minutes. No more waiting days for delivery.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🏪</div>
+                <h3 class="feature-title">LOCAL BOUTIQUES</h3>
+                <p class="feature-desc">Shop from hundreds of independent stores in your neighborhood.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3 class="feature-title">BEST PRICES</h3>
+                <p class="feature-desc">Same store prices, no markup. Support local and save money.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📦</div>
+                <h3 class="feature-title">REAL-TIME TRACKING</h3>
+                <p class="feature-desc">Track your order from store to door with live updates.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3 class="feature-title">SECURE PAYMENT</h3>
+                <p class="feature-desc">Powered by Stripe. Your payment info is always safe.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">❤️</div>
+                <h3 class="feature-title">EASY RETURNS</h3>
+                <p class="feature-desc">Changed your mind? Free returns within 14 days, no questions asked.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-header">
+            <h2 class="section-title">HOW IT WORKS</h2>
+        </div>
+
+        <div class="tabs">
+            <button type="button" class="tab active" onclick="switchTab(event, 'shopper')">FOR SHOPPERS</button>
+            <button type="button" class="tab" onclick="switchTab(event, 'merchant')">FOR MERCHANTS</button>
+        </div>
+
+        <div class="steps-container active" id="shopper-steps">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3 class="step-title">BROWSE</h3>
+                <p class="step-desc">Explore hundreds of local boutiques and discover fresh styles in your area.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3 class="step-title">ORDER</h3>
+                <p class="step-desc">Add items to your cart and checkout securely with Stripe payment.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3 class="step-title">TRACK</h3>
+                <p class="step-desc">Watch your order in real-time as it's prepared and delivered to you.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3 class="step-title">ENJOY</h3>
+                <p class="step-desc">Receive your fashion in minutes and rock your new look!</p>
+            </div>
+        </div>
+
+        <div class="steps-container" id="merchant-steps">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3 class="step-title">SIGN UP</h3>
+                <p class="step-desc">Create your merchant account and list your boutique in minutes.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3 class="step-title">ADD INVENTORY</h3>
+                <p class="step-desc">Upload your products with photos, prices, and stock levels.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3 class="step-title">GET ORDERS</h3>
+                <p class="step-desc">Receive orders instantly and prepare items for pickup.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3 class="step-title">GROW SALES</h3>
+                <p class="step-desc">Reach new customers and boost your revenue with zero upfront cost.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-container">
+            <h2 class="cta-title">READY TO GET STARTED?</h2>
+            <p class="cta-subtitle">Join thousands of Londoners getting fashion delivered in minutes</p>
+            <div class="cta-buttons">
+                <a href="{% url 'register_choice' %}" class="btn-cta">SHOP NOW →</a>
+                <a href="{% url 'register_choice' %}" class="btn-cta">BECOME A MERCHANT →</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div>
+                <div class="footer-brand">INSTRWEAR</div>
+                <p class="footer-desc">
+                    London's fastest fashion delivery platform. Connecting local boutiques with style-savvy shoppers since 2024.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="footer-title">SHOPPERS</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'shopper_product_list' %}" class="footer-link">Browse Stores</a></li>
+                    <li><a href="{% url 'register_choice' %}" class="footer-link">Sign Up</a></li>
+                    <li><a href="#how-it-works" class="footer-link">How It Works</a></li>
+                    <li><a href="{% url 'login' %}" class="footer-link">Track Order</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="footer-title">MERCHANTS</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'register_choice' %}" class="footer-link">List Your Store</a></li>
+                    <li><a href="{% url 'login' %}" class="footer-link">Merchant Portal</a></li>
+                    <li><a href="#" class="footer-link">Pricing</a></li>
+                    <li><a href="#" class="footer-link">Support</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="footer-title">COMPANY</h4>
+                <ul class="footer-links">
+                    <li><a href="#" class="footer-link">About Us</a></li>
+                    <li><a href="#" class="footer-link">Careers</a></li>
+                    <li><a href="#" class="footer-link">Press</a></li>
+                    <li><a href="#" class="footer-link">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            © 2026 InstrWear. All rights reserved. Made with ❤️ in London.
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(event, tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            document.querySelectorAll('.steps-container').forEach(s => s.classList.remove('active'));
+            document.getElementById(tab + '-steps').classList.add('active');
+        }
+    </script>
 </body>
 </html>

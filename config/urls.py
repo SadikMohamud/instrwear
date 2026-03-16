@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from core.views import landing, choose_role, shopper_onboarding, merchant_onboarding, shopper_dashboard, merchant_dashboard, shopper_orders 
 from accounts.views import login_view, logout_view, register_choice, register_shopper, register_merchant
-from marketplace.views import merchant_product_list, merchant_add_product, shopper_product_list
+from marketplace.views import merchant_product_list, merchant_add_product, shopper_product_list, shopper_product_detail
 
 urlpatterns = [
     # Admin site
@@ -24,8 +24,10 @@ urlpatterns = [
 # marketplace urls
     path("merchant/products/", merchant_product_list, name="merchant_products"),
     path("merchant/products/add/", merchant_add_product, name="merchant_add_product"),
+    
+# shopper product browsing urls
     path("shop/products/", shopper_product_list, name="shopper_product_list"),
-
+    path("shop/products/<slug:slug>/", shopper_product_detail, name="shopper_product_detail"),
     
 
 ]

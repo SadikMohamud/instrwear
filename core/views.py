@@ -1,7 +1,9 @@
 """
-core/views.py
-
-Core page views for the InstrWear platform.
+Author: Sadik Mohamud
+Project: InstrWear
+File: core/views.py
+Purpose: Core views for public pages, onboarding, dashboards, and shopper orders
+Framework: Django
 
 Handles:
 - landing page
@@ -16,6 +18,10 @@ The merchant dashboard also handles inline product creation
 from the dashboard modal.
 """
 
+# ============================================================
+# Imports
+# ============================================================
+
 # Django messaging framework for user feedback
 from django.contrib import messages
 
@@ -23,12 +29,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 # Shortcut helpers for rendering templates and redirecting
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 
 # Account profile models
 from accounts.models import MerchantProfile, ShopperProfile
 
-# Marketplace models and forms
+# Marketplace forms and models
 from marketplace.forms import ProductForm
 from marketplace.models import Product
 
@@ -39,16 +45,46 @@ from marketplace.models import Product
 
 def landing(request):
     """
-    Render the public landing page.
+    Public landing page controller.
+
+    Behaviour:
+    - If user is not authenticated, show landing page
+    - If user is admin, send them to Django admin
+    - If user is merchant, send them to merchant dashboard
+    - If user is shopper, send them to shopper dashboard
     """
+
+    # Redirect authenticated users away from the public landing page
+    if request.user.is_authenticated:
+
+        # Django superusers / platform admins
+        if request.user.is_superuser or request.user.role == "admin":
+            return redirect("/admin/")
+
+        # Merchant users
+        if request.user.role == "merchant":
+            return redirect("merchant_dashboard")
+
+        # Shopper users
+        if request.user.role == "shopper":
+            return redirect("shopper_dashboard")
+
+    # Public visitors see the landing page
     return render(request, "pages/landing.html")
 
 
 def choose_role(request):
     """
-    Render the role selection page.
+    Role selection page.
+
+    This view exists to support the route:
+    /choose-role/
+
+    For now, it sends users to the registration choice page.
+    That keeps existing URLs working without breaking config/urls.py.
     """
-    return render(request, "pages/choose_role.html")
+
+    return redirect("register_choice")
 
 
 # ============================================================
@@ -67,7 +103,7 @@ def shopper_onboarding(request):
     - optional profile image
     """
 
-    # Prevent merchants from accessing shopper onboarding
+    # Prevent non-shoppers from accessing shopper onboarding
     if request.user.role != "shopper":
         messages.error(request, "Access denied.")
         return redirect("landing")
@@ -126,7 +162,7 @@ def merchant_onboarding(request):
     - optional logo
     """
 
-    # Prevent shoppers from accessing merchant onboarding
+    # Prevent non-merchants from accessing merchant onboarding
     if request.user.role != "merchant":
         messages.error(request, "Access denied.")
         return redirect("landing")
@@ -261,11 +297,3 @@ def shopper_orders(request):
         return redirect("landing")
 
     return render(request, "shopper/orders.html")
-
-
-# ------------------------------------------------------------------
-# Author: Sadik Mohamud
-# Project: InstrWear
-# File: core/views.py
-# Purpose: Core views for onboarding, dashboards, and shopper orders
-# ------------------------------------------------------------------

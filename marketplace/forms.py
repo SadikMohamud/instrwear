@@ -25,41 +25,6 @@ class ProductForm(forms.ModelForm):
             "is_active",
         ]
 
-        widgets = {
-            "category": forms.Select(attrs={"class": "merchant-form-input"}),
-            "name": forms.TextInput(
-                attrs={
-                    "class": "merchant-form-input",
-                    "placeholder": "Nike Air Max 90",
-                }
-            ),
-            "description": forms.Textarea(
-                attrs={
-                    "class": "merchant-form-input",
-                    "placeholder": "Product description...",
-                    "rows": 4,
-                }
-            ),
-            "price": forms.NumberInput(
-                attrs={
-                    "class": "merchant-form-input",
-                    "placeholder": "99.99",
-                    "step": "0.01",
-                }
-            ),
-            "stock": forms.NumberInput(
-                attrs={
-                    "class": "merchant-form-input",
-                    "placeholder": "50",
-                }
-            ),
-            "image": forms.ClearableFileInput(attrs={"class": "merchant-form-input"}),
-            "is_active": forms.Select(
-                attrs={"class": "merchant-form-input"},
-                choices=[(True, "Active"), (False, "Inactive")],
-            ),
-        }
-
 
 # ------------------------------------------------------------
 # Author: Sadik Mohamud
