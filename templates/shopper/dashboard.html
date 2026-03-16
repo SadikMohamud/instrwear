@@ -3,7 +3,7 @@
 Author: Sadik Mohamud
 Project: InstrWear
 File: templates/shopper/dashboard.html
-Purpose: Wired shopper dashboard template
+Purpose: Wired shopper dashboard template using shopper first name
 -->
 
 <!DOCTYPE html>
@@ -86,11 +86,6 @@ Purpose: Wired shopper dashboard template
         .profile-btn:hover {
             transform: translateY(-2px);
             box-shadow: 6px 6px 0 0 #000;
-        }
-
-        .profile-btn:active {
-            transform: translateY(2px) translateX(2px);
-            box-shadow: none;
         }
 
         .profile-img {
@@ -184,16 +179,6 @@ Purpose: Wired shopper dashboard template
             box-shadow: 12px 12px 0 0 #000;
         }
 
-        .stat-card:nth-child(1) { transform: rotate(1deg); }
-        .stat-card:nth-child(2) { transform: rotate(-1deg); }
-        .stat-card:nth-child(3) { transform: rotate(0.5deg); }
-        .stat-card:nth-child(4) { transform: rotate(-0.5deg); }
-
-        .stat-card:nth-child(1):hover { transform: rotate(1deg) translateY(-4px); }
-        .stat-card:nth-child(2):hover { transform: rotate(-1deg) translateY(-4px); }
-        .stat-card:nth-child(3):hover { transform: rotate(0.5deg) translateY(-4px); }
-        .stat-card:nth-child(4):hover { transform: rotate(-0.5deg) translateY(-4px); }
-
         .stat-icon {
             font-size: 36px;
             margin-bottom: 15px;
@@ -253,11 +238,6 @@ Purpose: Wired shopper dashboard template
             box-shadow: 6px 6px 0 0 #000;
         }
 
-        .view-all:active {
-            transform: translateY(2px) translateX(2px);
-            box-shadow: none;
-        }
-
         .order-card {
             background: var(--white);
             border: 4px solid var(--fg);
@@ -265,12 +245,6 @@ Purpose: Wired shopper dashboard template
             margin-bottom: 20px;
             transition: all 0.1s;
             box-shadow: 8px 8px 0 0 #000;
-            position: relative;
-        }
-
-        .order-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 12px 12px 0 0 #000;
         }
 
         .order-header {
@@ -441,14 +415,6 @@ Purpose: Wired shopper dashboard template
             .quick-actions {
                 grid-template-columns: repeat(2, 1fr);
             }
-
-            .stat-card {
-                transform: rotate(0deg) !important;
-            }
-
-            .stat-card:hover {
-                transform: translateY(-4px) !important;
-            }
         }
 
         @media (max-width: 560px) {
@@ -461,47 +427,30 @@ Purpose: Wired shopper dashboard template
                 flex-direction: column;
                 align-items: flex-start;
             }
-
-            .order-total {
-                font-size: 20px;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <a href="{% url 'shopper_dashboard' %}" class="logo">INSTRWEAR</a>
 
         <a href="{% url 'shopper_onboarding' %}" class="profile-btn">
             <div class="profile-img">👤</div>
             <span class="profile-name">
-                {% if request.user.first_name %}
-                    {{ request.user.first_name|upper }}
-                {% else %}
-                    PROFILE
-                {% endif %}
+                {{ request.user.first_name|default:"SHOPPER"|upper }}
             </span>
         </a>
     </header>
 
-    <!-- Main Content -->
     <main class="main">
-        <!-- Welcome -->
         <div class="welcome">
             <div class="badge-float">SHOPPER</div>
             <h1 class="welcome-title">
-                HEY,
-                {% if request.user.first_name %}
-                    {{ request.user.first_name|upper }}!
-                {% else %}
-                    THERE!
-                {% endif %}
+                HEY, {{ request.user.first_name|default:"SHOPPER"|upper }}!
             </h1>
             <p class="welcome-subtitle">Your Fashion Dashboard</p>
         </div>
 
-        <!-- Quick Stats -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon">📦</div>
@@ -528,7 +477,6 @@ Purpose: Wired shopper dashboard template
             </div>
         </div>
 
-        <!-- Quick Actions -->
         <div class="section">
             <div class="section-header">
                 <h2 class="section-title">QUICK ACTIONS</h2>
@@ -538,7 +486,7 @@ Purpose: Wired shopper dashboard template
             <div class="quick-actions">
                 <a href="{% url 'shopper_product_list' %}" class="action-card">
                     <div class="action-title">Browse Products</div>
-                    <div class="action-text">Explore what merchants have listed and start building the shopper flow.</div>
+                    <div class="action-text">Explore what merchants have listed and start shopping.</div>
                 </a>
 
                 <a href="{% url 'shopper_orders' %}" class="action-card">
@@ -553,7 +501,6 @@ Purpose: Wired shopper dashboard template
             </div>
         </div>
 
-        <!-- Orders -->
         <div class="section">
             <div class="section-header">
                 <h2 class="section-title">ORDER HISTORY</h2>
@@ -592,28 +539,8 @@ Purpose: Wired shopper dashboard template
                 </div>
             {% endif %}
         </div>
-
-        <!-- Recently Viewed Placeholder -->
-        <div class="section">
-            <div class="section-header">
-                <h2 class="section-title">NEXT STEP</h2>
-                <a href="{% url 'shopper_product_list' %}" class="view-all">BROWSE →</a>
-            </div>
-
-            <div class="order-card">
-                <div class="order-items">
-                    <div class="item-image">👟</div>
-                    <div class="item-info">
-                        <div class="item-name">Marketplace browsing is the next page to wire</div>
-                        <div class="item-store">This button should take the shopper into the live product listing</div>
-                    </div>
-                    <div class="order-total">GO</div>
-                </div>
-            </div>
-        </div>
     </main>
 
-    <!-- Bottom Navigation -->
     <nav class="bottom-nav">
         <a href="{% url 'landing' %}" class="nav-item">
             <div class="nav-icon">🏠</div>
@@ -635,16 +562,10 @@ Purpose: Wired shopper dashboard template
             <div class="nav-label">Orders</div>
         </a>
 
-        <a href="{% url 'shopper_onboarding' %}" class="nav-item">
-            <div class="nav-icon">👤</div>
-            <div class="nav-label">Profile</div>
-        </a>
-
-         <a href="{% url 'logout' %}" class="nav-item">
+        <a href="{% url 'logout' %}" class="nav-item">
             <div class="nav-icon">🚪</div>
             <div class="nav-label">Logout</div>
         </a>
-    </nav>
     </nav>
 
     <!--Start of Tawk.to Script-->

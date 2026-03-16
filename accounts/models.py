@@ -1,16 +1,17 @@
 """
-accounts/models.py
+Author: Sadik Mohamud
+Project: InstrWear
+File: accounts/models.py
+Purpose: Defines custom authentication system and profile models
+Framework: Django
 
-This file defines the authentication system and profile models
-for the InstrWear platform.
-
-InstrWear supports two user roles:
-1. Shopper – customers buying clothing
-2. Merchant – businesses selling clothing
+InstrWear supports three user roles:
+1. Admin – platform administrator / superuser
+2. Shopper – customers buying clothing
+3. Merchant – businesses selling clothing
 
 Each role has its own profile model storing additional data
-such as address, phone number, and branding.
-
+such as address, phone number, profile image, and branding.
 """
 
 # Django settings import (used to reference the AUTH_USER_MODEL safely)
@@ -54,7 +55,7 @@ class CustomUserManager(BaseUserManager):
         if not email:
             raise ValueError("Email is required")
 
-        # Normalize email format (lowercase domain etc.)
+        # Normalize email format
         email = self.normalize_email(email)
 
         # Create user instance
@@ -67,7 +68,6 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
 
         return user
-
 
     def create_superuser(self, email, password=None, **extra_fields):
         """
@@ -103,21 +103,19 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     Supports multiple user roles.
     """
 
-    # Role choices allow the platform to differentiate user types
     class Role(models.TextChoices):
         ADMIN = "admin", "Admin"
         SHOPPER = "shopper", "Shopper"
         MERCHANT = "merchant", "Merchant"
 
-
     # Unique login identifier
     email = models.EmailField(unique=True)
 
-    # User's real name (used in welcome messages and dashboards)
+    # User's real name
     first_name = models.CharField(max_length=120, blank=True)
     last_name = models.CharField(max_length=120, blank=True)
 
-    # Determines whether user is shopper or merchant
+    # Determines whether user is admin, shopper or merchant
     role = models.CharField(
         max_length=20,
         choices=Role.choices,
@@ -137,7 +135,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # No additional required fields when creating superuser
     REQUIRED_FIELDS = []
 
-def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):
         """
         Ensure Django superusers always use the admin role.
 
@@ -150,8 +148,8 @@ def save(self, *args, **kwargs):
             self.is_staff = True
 
         super().save(*args, **kwargs)
-    
-def __str__(self):
+
+    def __str__(self):
         """
         String representation of the user.
         Shows full name if available, otherwise email.
@@ -168,12 +166,8 @@ def __str__(self):
 class ShopperProfile(models.Model):
     """
     Stores additional information for shoppers.
-
-    This model extends the CustomUser model
-    using a OneToOne relationship.
     """
 
-    # Link profile to user account
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -190,16 +184,14 @@ class ShopperProfile(models.Model):
     # Contact information
     phone = models.CharField(max_length=20, blank=True)
 
-    # Address fields (UK address format)
+    # Address fields
     house = models.CharField(max_length=100, blank=True)
     street = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=120, blank=True)
     county = models.CharField(max_length=120, blank=True)
     postcode = models.CharField(max_length=20, blank=True)
 
-
     def __str__(self):
-        """Readable representation inside Django admin"""
         return f"ShopperProfile: {self.user.email}"
 
 
@@ -210,12 +202,8 @@ class ShopperProfile(models.Model):
 class MerchantProfile(models.Model):
     """
     Stores business information for merchants.
-
-    Merchants represent stores selling clothing
-    on the InstrWear marketplace.
     """
 
-    # Link merchant profile to user
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -245,23 +233,5 @@ class MerchantProfile(models.Model):
     # Merchant bio / shop description
     bio = models.TextField(blank=True)
 
-
     def __str__(self):
-        """
-        Return business name if available,
-        otherwise fallback to email.
-        """
         return self.business_name or f"MerchantProfile: {self.user.email}"
-
-
-# ============================================================
-# File Metadata
-# ============================================================
-
-"""
-Author: Sadik Mohamud
-Project: InstrWear
-File: accounts/models.py
-Purpose: Defines custom authentication system and profile models
-Framework: Django
-"""
