@@ -6,25 +6,27 @@ Purpose: Product, cart, and checkout views for merchant and shopper flows
 Framework: Django
 """
 
-# ============================================================
-# Imports
-# ============================================================
-
-import os
-
 import stripe
+
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.db import transaction
+from django.views.decorators.http import require_POST
 
 from .forms import CheckoutForm, ProductForm
 from .models import Cart, CartItem, Category, Order, OrderItem, Product
 
-# Configure Stripe using environment variable
-stripe.api_key = os.getenv("STRIPE_SECRET_KEY", "")
+
+# ============================================================
+# Stripe Configuration
+# ============================================================
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 # ============================================================
@@ -119,6 +121,7 @@ def merchant_add_product(request):
     return render(request, "merchant/add_product.html", {"form": form})
 
 
+
 # ============================================================
 # Shopper Product List
 # ============================================================
@@ -161,7 +164,6 @@ def shopper_product_list(request):
 
     return render(request, "shopper/products_list.html", context)
 
-
 # ============================================================
 # Shopper Product Detail
 # ============================================================
@@ -183,7 +185,6 @@ def shopper_product_detail(request, slug):
     }
 
     return render(request, "shopper/product_detail.html", context)
-
 
 # ============================================================
 # Cart Views
@@ -313,7 +314,6 @@ def remove_cart_item(request, item_id):
     messages.success(request, "Item removed from cart.")
     return redirect("cart_view")
 
-
 # ============================================================
 # Checkout Views
 # ============================================================
@@ -375,17 +375,16 @@ def checkout_view(request):
                     }
                 )
 
-            if not stripe.api_key:
-                messages.warning(
-                    request,
-                    "Stripe is not configured yet. Order was created locally, but payment is not active."
-                )
-                return redirect("shopper_orders")
+            if not settings.STRIPE_SECRET_KEY:
+                messages.error(request, "Stripe is not configured yet.")
+                return redirect("cart_view")
 
             checkout_session = stripe.checkout.Session.create(
                 mode="payment",
                 line_items=line_items,
-                success_url=request.build_absolute_uri(reverse("checkout_success")) + "?session_id={CHECKOUT_SESSION_ID}",
+                success_url=request.build_absolute_uri(
+                    reverse("checkout_success")
+                ) + "?session_id={CHECKOUT_SESSION_ID}",
                 cancel_url=request.build_absolute_uri(reverse("checkout_cancel")),
                 metadata={
                     "order_id": str(order.id),
@@ -456,43 +455,55 @@ def checkout_cancel(request):
 # ============================================================
 
 @csrf_exempt
+@require_POST
 def stripe_webhook(request):
     """
-    Handle Stripe webhook events.
+    Handle Stripe webhook events safely and idempotently.
     """
 
     payload = request.body
     sig_header = request.META.get("HTTP_STRIPE_SIGNATURE", "")
-    webhook_secret = os.getenv("STRIPE_WEBHOOK_SECRET", "")
+    endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 
-    if not webhook_secret:
-        return HttpResponse(status=200)
+    if not endpoint_secret:
+        return HttpResponse("Webhook secret not configured.", status=200)
 
     try:
         event = stripe.Webhook.construct_event(
-            payload,
-            sig_header,
-            webhook_secret,
+            payload=payload,
+            sig_header=sig_header,
+            secret=endpoint_secret,
         )
     except ValueError:
-        return HttpResponse(status=400)
+        return HttpResponse("Invalid payload.", status=400)
     except stripe.error.SignatureVerificationError:
-        return HttpResponse(status=400)
+        return HttpResponse("Invalid signature.", status=400)
 
     if event["type"] == "checkout.session.completed":
         session = event["data"]["object"]
-        order_id = session.get("metadata", {}).get("order_id")
+        metadata = session.get("metadata", {}) or {}
+        order_id = metadata.get("order_id")
+        payment_intent_id = session.get("payment_intent", "")
 
-        if order_id:
-            try:
-                order = Order.objects.get(id=order_id)
-            except Order.DoesNotExist:
-                return HttpResponse(status=200)
+        if not order_id:
+            return HttpResponse(status=200)
 
-            if order.payment_status != Order.PaymentStatus.PAID:
+        try:
+            with transaction.atomic():
+                order = (
+                    Order.objects.select_for_update()
+                    .prefetch_related("items__product")
+                    .get(id=order_id)
+                )
+
+                # Prevent duplicate processing if Stripe retries the webhook.
+                if order.payment_status == Order.PaymentStatus.PAID:
+                    return HttpResponse(status=200)
+
+                # Update the order as paid.
                 order.payment_status = Order.PaymentStatus.PAID
                 order.status = Order.Status.PAID
-                order.stripe_payment_intent_id = session.get("payment_intent", "")
+                order.stripe_payment_intent_id = payment_intent_id
                 order.save(
                     update_fields=[
                         "payment_status",
@@ -501,12 +512,23 @@ def stripe_webhook(request):
                     ]
                 )
 
-                for item in order.items.select_related("product"):
+                # Reduce stock safely.
+                for item in order.items.all():
                     product = item.product
-                    if product.stock >= item.quantity:
-                        product.stock -= item.quantity
-                        product.save(update_fields=["stock"])
 
+                    if product.stock < item.quantity:
+                        return HttpResponse(
+                            f"Insufficient stock for product ID {product.id}.",
+                            status=200,
+                        )
+
+                    product.stock -= item.quantity
+                    product.save(update_fields=["stock"])
+
+                # Clear the shopper cart after successful payment.
                 CartItem.objects.filter(cart__user=order.user).delete()
+
+        except Order.DoesNotExist:
+            return HttpResponse(status=200)
 
     return HttpResponse(status=200)
