@@ -33,22 +33,42 @@ User = get_user_model()
 # Welcome Email
 # ============================================================
 
-def send_welcome_email(to_email: str, request):
+def send_welcome_email(to_email: str, request, role: str):
     """
     Sends a welcome email after successful registration.
     """
 
     subject = "Welcome to InstrWear"
+    template_name = "emails/Welcome.html"
 
     login_url = request.build_absolute_uri("/accounts/login/")
 
+    context = {
+        "email": to_email,
+        "login_url": login_url,
+        "year": now().year,
+    }
+
+    if role == "merchant":
+        subject = "Welcome to InstrWear - Merchant"
+        template_name = "emails/MerchantWelcome.html"
+        context.update(
+            {
+                "dashboard_url": request.build_absolute_uri("/merchant/dashboard/"),
+                "add_product_url": request.build_absolute_uri("/merchant/products/add/"),
+                "merchant_guide_url": request.build_absolute_uri("/merchant/onboarding/"),
+            }
+        )
+    else:
+        context.update(
+            {
+                "browse_url": request.build_absolute_uri("/shopper/products/"),
+            }
+        )
+
     html = render_to_string(
-        "emails/welcome.html",
-        {
-            "email": to_email,
-            "login_url": login_url,
-            "year": now().year,
-        },
+        template_name,
+        context,
     )
 
     msg = EmailMultiAlternatives(
@@ -167,7 +187,7 @@ def register_shopper(request):
             role="shopper",
         )
 
-        send_welcome_email(user.email, request)
+        send_welcome_email(user.email, request, user.role)
 
         login(request, user)
 
@@ -202,7 +222,7 @@ def register_merchant(request):
             role="merchant",
         )
 
-        send_welcome_email(user.email, request)
+        send_welcome_email(user.email, request, user.role)
 
         login(request, user)
 
