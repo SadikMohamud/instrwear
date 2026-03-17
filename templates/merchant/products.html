@@ -382,6 +382,33 @@ Purpose: Merchant products inventory template
             font-weight: 900;
         }
 
+        .product-actions {
+            margin-top: 16px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-delete {
+            padding: 10px 16px;
+            background: var(--white);
+            border: 3px solid var(--fg);
+            color: #b42318;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.08em;
+            box-shadow: 3px 3px 0 0 #000;
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 0 0 #000;
+            background: #fee4e2;
+        }
+
         .empty-state {
             text-align: center;
             padding: 80px 40px;
@@ -465,6 +492,14 @@ Purpose: Merchant products inventory template
 
             .product-meta {
                 grid-template-columns: 1fr;
+            }
+
+            .product-actions {
+                justify-content: stretch;
+            }
+
+            .btn-delete {
+                width: 100%;
             }
         }
     </style>
@@ -611,6 +646,13 @@ Purpose: Merchant products inventory template
                                         {% endif %}
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="product-actions">
+                                <form method="post" action="{% url 'merchant_delete_product' product.id %}" onsubmit="return confirm('Delete {{ product.name|escapejs }}? This cannot be undone.');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-delete">Delete</button>
+                                </form>
                             </div>
                         </article>
                     {% endfor %}
