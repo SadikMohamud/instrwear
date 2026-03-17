@@ -32,6 +32,7 @@ from accounts.views import (
 from marketplace.views import (
     merchant_product_list,
     merchant_add_product,
+    merchant_delete_product,
     shopper_product_list,
     shopper_product_detail,
     cart_view,
@@ -81,6 +82,7 @@ urlpatterns = [
     path("merchant/onboarding/", merchant_onboarding, name="merchant_onboarding"),
     path("merchant/products/", merchant_product_list, name="merchant_products"),
     path("merchant/products/add/", merchant_add_product, name="merchant_add_product"),
+    path("merchant/products/<int:product_id>/delete/", merchant_delete_product, name="merchant_delete_product"),
 
     # ============================================================
     # Cart Routes

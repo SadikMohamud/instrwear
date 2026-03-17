@@ -121,6 +121,30 @@ def merchant_add_product(request):
     return render(request, "merchant/add_product.html", {"form": form})
 
 
+@login_required
+@require_POST
+def merchant_delete_product(request, product_id):
+    """
+    Delete a product owned by the currently logged-in merchant.
+    """
+
+    if request.user.role != "merchant":
+        messages.error(request, "Access denied.")
+        return redirect("landing")
+
+    product = get_object_or_404(
+        Product,
+        id=product_id,
+        merchant=request.user,
+    )
+
+    product_name = product.name
+    product.delete()
+
+    messages.success(request, f"{product_name} was deleted successfully.")
+    return redirect("merchant_products")
+
+
 
 # ============================================================
 # Shopper Product List
