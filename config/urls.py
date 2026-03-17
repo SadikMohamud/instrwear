@@ -108,5 +108,5 @@ urlpatterns = [
 # ============================================================
 # Media files (development only)
 # ============================================================
-if settings.DEBUG:
+if settings.DEBUG or not getattr(settings, "USE_CLOUDINARY", False):
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
