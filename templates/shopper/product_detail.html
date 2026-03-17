@@ -1,40 +1,276 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}{{ product.name }}{% endblock %}
+{% block title %}{{ product.name }} | InstrWear{% endblock %}
+
+{% block extra_css %}
+<style>
+  .product-detail-shell {
+    min-height: 100vh;
+    padding: 32px 20px 56px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .product-detail-card {
+    width: 100%;
+    max-width: 1100px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 28px;
+    background: #111111;
+    border: 4px solid #000000;
+    border-radius: 28px;
+    box-shadow: 10px 10px 0 #000000;
+    padding: 24px;
+  }
+
+  .product-detail-media,
+  .product-detail-content {
+    background: #1a1a1a;
+    border: 3px solid #000000;
+    border-radius: 22px;
+    box-shadow: 6px 6px 0 #000000;
+  }
+
+  .product-detail-media {
+    overflow: hidden;
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      linear-gradient(135deg, rgba(255, 214, 10, 0.08), rgba(255, 255, 255, 0.02)),
+      #161616;
+  }
+
+  .product-detail-image {
+    width: 100%;
+    height: 100%;
+    min-height: 520px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .product-detail-placeholder {
+    padding: 32px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .product-detail-content {
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .product-detail-top {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .product-detail-eyebrow {
+    display: inline-flex;
+    align-self: flex-start;
+    padding: 8px 14px;
+    background: #ffd60a;
+    color: #000000;
+    border: 3px solid #000000;
+    border-radius: 999px;
+    box-shadow: 4px 4px 0 #000000;
+    font-weight: 800;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .product-detail-title {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.05;
+    font-weight: 900;
+    color: #ffffff;
+  }
+
+  .product-detail-description {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.85;
+    font-size: 1rem;
+  }
+
+  .product-detail-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+    gap: 14px;
+    margin-top: 4px;
+  }
+
+  .product-meta-box {
+    background: #0f0f0f;
+    border: 3px solid #000000;
+    border-radius: 18px;
+    box-shadow: 4px 4px 0 #000000;
+    padding: 16px;
+  }
+
+  .product-meta-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.58);
+    margin-bottom: 8px;
+  }
+
+  .product-meta-value {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #ffffff;
+  }
+
+  .product-meta-value--price {
+    color: #ffd60a;
+    font-size: 1.7rem;
+  }
+
+  .product-stock-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    padding: 10px 14px;
+    border: 3px solid #000000;
+    border-radius: 999px;
+    box-shadow: 4px 4px 0 #000000;
+    font-weight: 800;
+    background: {% if product.stock > 0 %}#22c55e{% else %}#ef4444{% endif %};
+    color: #000000;
+  }
+
+  .product-detail-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 26px;
+  }
+
+  .product-detail-actions .button {
+    justify-content: center;
+    min-width: 170px;
+  }
+
+  .product-detail-note {
+    margin-top: 18px;
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.58);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 900px) {
+    .product-detail-card {
+      grid-template-columns: 1fr;
+      padding: 18px;
+    }
+
+    .product-detail-media,
+    .product-detail-image {
+      min-height: 340px;
+    }
+
+    .product-detail-content {
+      padding: 22px;
+    }
+
+    .product-detail-meta-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .product-detail-actions .button {
+      width: 100%;
+    }
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<main class="dashboard-shell">
-  <section class="dashboard-card" style="max-width: 900px; margin: 0 auto;">
-    {% if product.image %}
-      <img
-        src="{{ product.image.url }}"
-        alt="{{ product.name }}"
-        style="width:100%; height:380px; object-fit:cover; border-radius:20px; margin-bottom:20px;"
-      >
-    {% endif %}
+<main class="dashboard-shell product-detail-shell">
+  <section class="product-detail-card" aria-label="Product details">
+    <div class="product-detail-media">
+      {% if product.image %}
+        <img
+          src="{{ product.image.url }}"
+          alt="{{ product.name }}"
+          class="product-detail-image"
+        >
+      {% else %}
+        <div class="product-detail-placeholder">
+          <p>No product image available yet.</p>
+        </div>
+      {% endif %}
+    </div>
 
-    <p class="dashboard-eyebrow">
-      {% if product.category %}{{ product.category.name }}{% else %}Product{% endif %}
-    </p>
+    <div class="product-detail-content">
+      <div class="product-detail-top">
+        <span class="product-detail-eyebrow">
+          {% if product.category %}
+            {{ product.category.name }}
+          {% else %}
+            Product
+          {% endif %}
+        </span>
 
-    <h1 style="margin-bottom: 14px;">{{ product.name }}</h1>
+        <h1 class="product-detail-title">{{ product.name }}</h1>
 
-    <p style="margin-bottom: 18px; color: rgba(255,255,255,0.75); line-height: 1.8;">
-      {{ product.description|default:"No description available." }}
-    </p>
+        <p class="product-detail-description">
+          {{ product.description|default:"No description available." }}
+        </p>
 
-    <p style="font-size: 24px; font-weight: 700; margin-bottom: 10px;">
-      £{{ product.price }}
-    </p>
+        <div class="product-detail-meta-grid">
+          <div class="product-meta-box">
+            <span class="product-meta-label">Price</span>
+            <span class="product-meta-value product-meta-value--price">£{{ product.price }}</span>
+          </div>
 
-    <p style="margin-bottom: 24px; color: rgba(255,255,255,0.65);">
-      Stock: {{ product.stock }}
-    </p>
+          <div class="product-meta-box">
+            <span class="product-meta-label">Stock</span>
+            <span class="product-meta-value">{{ product.stock }}</span>
+          </div>
+        </div>
 
-    <div style="display:flex; gap:12px; flex-wrap:wrap;">
-      <button class="button button--primary" type="button">Add to Cart</button>
-      <a class="button button--primary" href="{% url 'shopper_product_list' %}">Back to Shop</a>
+        <div class="product-stock-badge">
+          {% if product.stock > 0 %}
+            In Stock
+          {% else %}
+            Out of Stock
+          {% endif %}
+        </div>
+
+        <p class="product-detail-note">
+          Browse product information, confirm pricing, and return to the shop when ready.
+        </p>
+      </div>
+
+      <div class="product-detail-actions">
+        <button
+          class="button button--primary"
+          type="button"
+          {% if product.stock < 1 %}disabled aria-disabled="true"{% endif %}
+        >
+          Add to Cart
+        </button>
+
+        <a class="button button--primary" href="{% url 'shopper_product_list' %}">
+          Back to Shop
+        </a>
+      </div>
     </div>
   </section>
 </main>
@@ -43,6 +279,6 @@
 Author: Sadik Mohamud
 Project: InstrWear
 File: templates/shopper/product_detail.html
-Purpose: Shopper single product detail page
+Purpose: Neo-brutalist shopper product detail page styled to match the wider dashboard/design system.
 -->
 {% endblock %}
