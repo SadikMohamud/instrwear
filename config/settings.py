@@ -18,6 +18,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+USE_CLOUDINARY = bool(os.getenv("CLOUDINARY_URL"))
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -52,6 +54,12 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'core',
 ]
+
+if USE_CLOUDINARY:
+    INSTALLED_APPS += [
+        'cloudinary_storage',
+        'cloudinary',
+    ]
 
 AUTH_USER_MODEL = "accounts.CustomUser"
 
@@ -140,13 +148,19 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+if USE_CLOUDINARY:
+    STORAGES["default"] = {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    }
+else:
+    STORAGES["default"] = {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
