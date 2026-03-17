@@ -25,6 +25,9 @@ from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.utils.timezone import now
+import logging
+
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -79,7 +82,11 @@ def send_welcome_email(to_email: str, request, role: str):
     )
 
     msg.attach_alternative(html, "text/html")
-    msg.send()
+
+    try:
+        msg.send()
+    except Exception:
+        logger.exception("Welcome email failed to send for %s", to_email)
 
 
 # ============================================================
