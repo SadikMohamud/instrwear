@@ -188,6 +188,8 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+# Avoid hard 500 errors when a stale manifest misses an entry.
+WHITENOISE_MANIFEST_STRICT = False
 
 STORAGES = {
     "staticfiles": {
