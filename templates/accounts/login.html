@@ -1,439 +1,66 @@
+{% extends "base.html" %}
 {% load static %}
-<!--
-Author: Sadik Mohamud
-Project: InstrWear
-File: templates/accounts/login.html
-Purpose: Choice-based login template for shopper and merchant users
--->
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INSTRWEAR - LOGIN</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{% block title %}InstrWear - Login{% endblock %}
 
-        :root {
-            --bg: #FFFDF5;
-            --fg: #000000;
-            --accent: #FF6B6B;
-            --secondary: #FFD93D;
-            --muted: #C4B5FD;
-            --white: #FFFFFF;
-            --danger: #ff4d4f;
-            --success: #22c55e;
-        }
+{% block content %}
+<main class="iw-auth-page">
+    <section class="iw-auth-shell">
+        <div class="iw-auth-card iw-auth-card-login">
+            <a href="{% url 'landing' %}" class="iw-auth-logo">INSTRWEAR</a>
+            <p class="iw-auth-subtitle">Choose your account type and log in</p>
 
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            background: var(--bg);
-            color: var(--fg);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: radial-gradient(#000 1.5px, transparent 1.5px);
-            background-size: 30px 30px;
-            opacity: 0.03;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .container {
-            max-width: 500px;
-            width: 100%;
-            background: var(--white);
-            border: 4px solid var(--fg);
-            padding: 50px 40px;
-            position: relative;
-            z-index: 1;
-            box-shadow: 16px 16px 0 0 #000;
-        }
-
-        .logo {
-            text-align: center;
-            font-size: 48px;
-            font-weight: 900;
-            margin-bottom: 10px;
-            letter-spacing: -0.05em;
-            text-transform: uppercase;
-            line-height: 1;
-            text-decoration: none;
-            color: var(--fg);
-            display: block;
-        }
-
-        .subtitle {
-            text-align: center;
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 40px;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-        }
-
-        .messages {
-            margin-bottom: 25px;
-            display: grid;
-            gap: 12px;
-        }
-
-        .message {
-            border: 4px solid var(--fg);
-            padding: 14px 16px;
-            font-size: 14px;
-            font-weight: 700;
-            box-shadow: 4px 4px 0 0 #000;
-            background: var(--white);
-        }
-
-        .message.error {
-            background: #ffe3e3;
-        }
-
-        .message.success {
-            background: #dcfce7;
-        }
-
-        .role-selector {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 40px;
-        }
-
-        .role-option {
-            background: var(--white);
-            border: 4px solid var(--fg);
-            padding: 30px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.1s;
-            box-shadow: 6px 6px 0 0 #000;
-        }
-
-        .role-option:hover {
-            transform: translateY(-3px);
-            box-shadow: 9px 9px 0 0 #000;
-        }
-
-        .role-option.active {
-            background: var(--accent);
-            color: var(--white);
-            transform: translateY(-3px);
-            box-shadow: 9px 9px 0 0 #000;
-        }
-
-        .role-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
-
-        .role-label {
-            font-size: 16px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 12px;
-            font-weight: 900;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-        }
-
-        .form-input {
-            width: 100%;
-            background: var(--white);
-            border: 4px solid var(--fg);
-            padding: 16px 18px;
-            font-size: 16px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            transition: all 0.2s;
-            box-shadow: 4px 4px 0 0 #000;
-        }
-
-        .form-input:focus {
-            outline: none;
-            background: var(--secondary);
-            box-shadow: 6px 6px 0 0 #000;
-        }
-
-        .form-input::placeholder {
-            color: rgba(0, 0, 0, 0.3);
-            font-weight: 500;
-        }
-
-        .forgot-password {
-            text-align: right;
-            margin-top: -15px;
-            margin-bottom: 30px;
-        }
-
-        .forgot-link {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--fg);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .forgot-link:hover {
-            color: var(--accent);
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 20px;
-            background: var(--accent);
-            border: 4px solid var(--fg);
-            color: var(--white);
-            font-size: 18px;
-            font-weight: 900;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.1s;
-            margin-top: 10px;
-            font-family: 'Space Grotesk', sans-serif;
-            box-shadow: 8px 8px 0 0 #000;
-            letter-spacing: 0.1em;
-        }
-
-        .btn-login:hover {
-            transform: translateY(-4px);
-            box-shadow: 12px 12px 0 0 #000;
-        }
-
-        .btn-login:active {
-            transform: translateY(2px) translateX(2px);
-            box-shadow: 2px 2px 0 0 #000;
-        }
-
-        .signup-section {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 4px solid var(--fg);
-        }
-
-        .signup-text {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-
-        .signup-links {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .btn-signup {
-            padding: 12px 24px;
-            background: var(--white);
-            border: 4px solid var(--fg);
-            color: var(--fg);
-            font-size: 13px;
-            font-weight: 900;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.1s;
-            font-family: 'Space Grotesk', sans-serif;
-            box-shadow: 4px 4px 0 0 #000;
-            letter-spacing: 0.1em;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-signup:hover {
-            background: var(--muted);
-            transform: translateY(-2px);
-            box-shadow: 6px 6px 0 0 #000;
-        }
-
-        .btn-signup:active {
-            transform: translateY(2px) translateX(2px);
-            box-shadow: none;
-        }
-
-        .back-home {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .back-link {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--fg);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .back-link:hover {
-            color: var(--accent);
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 40px 30px;
-            }
-
-            .logo {
-                font-size: 36px;
-            }
-
-            .signup-links {
-                flex-direction: column;
-            }
-
-            .btn-signup {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <a href="{% url 'landing' %}" class="logo">INSTRWEAR</a>
-        <p class="subtitle">Welcome Back</p>
-
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <div class="message {{ message.tags }}">{{ message }}</div>
-                {% endfor %}
-            </div>
-        {% endif %}
-
-        <!-- Role Selection -->
-        <div class="role-selector">
-            <div
-                class="role-option {% if role == 'shopper' or not role %}active{% endif %}"
-                data-role="shopper"
-                onclick="selectRole('shopper')"
-            >
-                <div class="role-icon">🛍️</div>
-                <div class="role-label">Shopper</div>
+            <div class="iw-role-selector" role="tablist" aria-label="Select login role">
+                <button type="button" class="iw-role-option {% if role == 'shopper' %}active{% endif %}" data-role="shopper">
+                    <span class="iw-role-icon">🛍</span>
+                    <span class="iw-role-label">Shopper</span>
+                </button>
+                <button type="button" class="iw-role-option {% if role == 'merchant' %}active{% endif %}" data-role="merchant">
+                    <span class="iw-role-icon">🏪</span>
+                    <span class="iw-role-label">Merchant</span>
+                </button>
             </div>
 
-            <div
-                class="role-option {% if role == 'merchant' %}active{% endif %}"
-                data-role="merchant"
-                onclick="selectRole('merchant')"
-            >
-                <div class="role-icon">🏪</div>
-                <div class="role-label">Merchant</div>
+            <form method="post" class="iw-auth-form" id="loginForm" action="{% url 'login' %}">
+                {% csrf_token %}
+                <input type="hidden" name="role" id="roleInput" value="{{ role|default:'shopper' }}">
+
+                <div class="iw-form-group">
+                    <label class="iw-form-label" for="email">Email Address</label>
+                    <input
+                        id="email"
+                        class="iw-form-input"
+                        type="email"
+                        name="email"
+                        placeholder="you@example.com"
+                        required
+                    >
+                </div>
+
+                <div class="iw-form-group">
+                    <label class="iw-form-label" for="password">Password</label>
+                    <input
+                        id="password"
+                        class="iw-form-input"
+                        type="password"
+                        name="password"
+                        placeholder="••••••••"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="iw-auth-submit">Log In</button>
+            </form>
+
+            <div class="iw-auth-footer">
+                <p>Need an account? <a href="{% url 'register_choice' %}">Create one</a></p>
+                <a href="{% url 'landing' %}" class="iw-auth-back-link">Back to landing page</a>
             </div>
         </div>
+    </section>
+</main>
+{% endblock %}
 
-        <!-- Login Form -->
-        <form id="loginForm" method="post" action="{% url 'login' %}">
-            {% csrf_token %}
-            <input type="hidden" name="role" id="selectedRoleInput" value="{{ role|default:'shopper' }}">
-
-            <div class="form-group">
-                <label class="form-label" for="email">Email Address</label>
-                <input
-                    type="email"
-                    id="email"
-                    class="form-input"
-                    name="email"
-                    placeholder="you@example.com"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    class="form-input"
-                    name="password"
-                    placeholder="••••••••"
-                    required
-                >
-            </div>
-
-            <div class="forgot-password">
-                <a href="#" class="forgot-link">Forgot Password?</a>
-            </div>
-
-            <button type="submit" class="btn-login">Login →</button>
-        </form>
-
-        <!-- Signup Section -->
-        <div class="signup-section">
-            <p class="signup-text">Don't have an account?</p>
-            <div class="signup-links">
-                <a href="{% url 'register_shopper' %}" class="btn-signup">Sign Up as Shopper</a>
-                <a href="{% url 'register_merchant' %}" class="btn-signup">Sign Up as Merchant</a>
-            </div>
-        </div>
-
-        <!-- Back to Home -->
-        <div class="back-home">
-            <a href="{% url 'landing' %}" class="back-link">← Back to Home</a>
-        </div>
-    </div>
-
-    <script>
-        let selectedRole = "{{ role|default:'shopper' }}";
-
-        function selectRole(role) {
-            selectedRole = role;
-
-            document.getElementById("selectedRoleInput").value = role;
-
-            document.querySelectorAll(".role-option").forEach(option => {
-                option.classList.remove("active");
-            });
-
-            document.querySelector(`[data-role="${role}"]`).classList.add("active");
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            selectRole(selectedRole || "shopper");
-        });
-    </script>
-
-    <!--Start of Tawk.to Script-->
-    <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/69b4593c6ccaea1c3830fc4f/1jjk7p5fv';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
-    </script>
-    <!--End of Tawk.to Script-->
-</body>
-</html>
+{% block extra_js %}
+<script src="{% static 'js/auth.js' %}"></script>
+{% endblock %}

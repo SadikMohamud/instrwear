@@ -6,15 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}InstrWear{% endblock %}</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="{% static 'css/landing.css' %}" />
   <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
   {% block extra_css %}{% endblock %}
 </head>
 <body>
   {% if messages %}
-    <aside class="messages" aria-live="polite" aria-atomic="true">
+    <aside class="site-messages" aria-live="polite" aria-atomic="true">
       {% for message in messages %}
-        <p class="message {{ message.tags }}">{{ message }}</p>
+        <p class="site-message {{ message.tags }}">{{ message }}</p>
       {% endfor %}
     </aside>
   {% endif %}

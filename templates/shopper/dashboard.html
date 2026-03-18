@@ -1,585 +1,147 @@
 {% load static %}
-<!--
-Author: Sadik Mohamud
-Project: InstrWear
-File: templates/shopper/dashboard.html
-Purpose: Wired shopper dashboard template using shopper first name
--->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INSTRWEAR - SHOPPER DASHBOARD</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        :root {
-            --bg: #FFFDF5;
-            --fg: #000000;
-            --accent: #FF6B6B;
-            --secondary: #FFD93D;
-            --muted: #C4B5FD;
-            --white: #FFFFFF;
-        }
-
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            background: var(--bg);
-            color: var(--fg);
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: radial-gradient(#000 1.5px, transparent 1.5px);
-            background-size: 25px 25px;
-            opacity: 0.02;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .header {
-            background: var(--white);
-            border-bottom: 4px solid var(--fg);
-            padding: 20px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 0 0 #000;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: -0.02em;
-            text-decoration: none;
-            color: var(--fg);
-        }
-
-        .profile-btn {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--secondary);
-            padding: 10px 20px;
-            border: 4px solid var(--fg);
-            cursor: pointer;
-            transition: all 0.1s;
-            box-shadow: 4px 4px 0 0 #000;
-            text-decoration: none;
-            color: var(--fg);
-        }
-
-        .profile-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 6px 6px 0 0 #000;
-        }
-
-        .profile-img {
-            width: 32px;
-            height: 32px;
-            background: var(--accent);
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            border: 2px solid var(--fg);
-        }
-
-        .profile-name {
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px;
-            padding-bottom: 120px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .welcome {
-            margin-bottom: 50px;
-            background: var(--accent);
-            padding: 40px;
-            border: 4px solid var(--fg);
-            box-shadow: 12px 12px 0 0 #000;
-            transform: rotate(-1deg);
-            position: relative;
-        }
-
-        .welcome-title {
-            font-size: 56px;
-            font-weight: 900;
-            margin-bottom: 10px;
-            letter-spacing: -0.05em;
-            text-transform: uppercase;
-            line-height: 1;
-            color: var(--white);
-            text-shadow: 4px 4px 0 #000;
-        }
-
-        .welcome-subtitle {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--white);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .badge-float {
-            position: absolute;
-            top: -20px;
-            right: 40px;
-            background: var(--secondary);
-            border: 4px solid var(--fg);
-            padding: 8px 16px;
-            font-weight: 900;
-            font-size: 12px;
-            text-transform: uppercase;
-            transform: rotate(5deg);
-            box-shadow: 4px 4px 0 0 #000;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 50px;
-        }
-
-        .stat-card {
-            background: var(--white);
-            border: 4px solid var(--fg);
-            padding: 25px;
-            transition: all 0.1s;
-            box-shadow: 8px 8px 0 0 #000;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 12px 12px 0 0 #000;
-        }
-
-        .stat-icon {
-            font-size: 36px;
-            margin-bottom: 15px;
-        }
-
-        .stat-value {
-            font-size: 42px;
-            font-weight: 900;
-            margin-bottom: 5px;
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .section {
-            margin-bottom: 50px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 4px solid var(--fg);
-        }
-
-        .section-title {
-            font-size: 32px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: -0.02em;
-        }
-
-        .view-all {
-            background: var(--fg);
-            color: var(--white);
-            padding: 10px 20px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            border: 4px solid var(--fg);
-            box-shadow: 4px 4px 0 0 #000;
-            transition: all 0.1s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .view-all:hover {
-            transform: translateY(-2px);
-            box-shadow: 6px 6px 0 0 #000;
-        }
-
-        .order-card {
-            background: var(--white);
-            border: 4px solid var(--fg);
-            padding: 25px;
-            margin-bottom: 20px;
-            transition: all 0.1s;
-            box-shadow: 8px 8px 0 0 #000;
-        }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .order-id {
-            font-size: 18px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .order-status {
-            padding: 8px 16px;
-            font-size: 11px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            background: var(--secondary);
-            border: 4px solid var(--fg);
-            box-shadow: 4px 4px 0 0 #000;
-        }
-
-        .order-items {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .item-image {
-            width: 60px;
-            height: 60px;
-            background: var(--muted);
-            border: 4px solid var(--fg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            flex-shrink: 0;
-        }
-
-        .item-info {
-            flex: 1;
-        }
-
-        .item-name {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .item-store {
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .order-total {
-            font-size: 24px;
-            font-weight: 900;
-        }
-
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .action-card {
-            background: var(--white);
-            border: 4px solid var(--fg);
-            padding: 24px;
-            text-decoration: none;
-            color: var(--fg);
-            box-shadow: 8px 8px 0 0 #000;
-            transition: all 0.1s;
-        }
-
-        .action-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 12px 12px 0 0 #000;
-        }
-
-        .action-title {
-            font-size: 20px;
-            font-weight: 900;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .action-text {
-            font-size: 14px;
-            font-weight: 700;
-            line-height: 1.5;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--white);
-            border-top: 4px solid var(--fg);
-            padding: 15px;
-            display: flex;
-            justify-content: space-around;
-            z-index: 100;
-            box-shadow: 0 -4px 0 0 #000;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 16px;
-            transition: all 0.1s;
-            text-decoration: none;
-            color: var(--fg);
-        }
-
-        .nav-item.active {
-            background: var(--accent);
-            border: 4px solid var(--fg);
-            box-shadow: 4px 4px 0 0 #000;
-            margin-top: -8px;
-        }
-
-        .nav-item:not(.active):hover {
-            transform: translateY(-4px);
-        }
-
-        .nav-icon {
-            font-size: 24px;
-        }
-
-        .nav-label {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                padding: 15px 20px;
-            }
-
-            .main {
-                padding: 20px;
-                padding-bottom: 100px;
-            }
-
-            .welcome {
-                transform: rotate(0deg);
-            }
-
-            .welcome-title {
-                font-size: 36px;
-            }
-
-            .stats-grid,
-            .quick-actions {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 560px) {
-            .stats-grid,
-            .quick-actions {
-                grid-template-columns: 1fr;
-            }
-
-            .order-items {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/shopper-dashboard.css' %}">
 </head>
-<body>
-    <header class="header">
-        <a href="{% url 'shopper_dashboard' %}" class="logo">INSTRWEAR</a>
+<body class="shopper-dashboard-page">
+    <header class="shop-header">
+        <a href="{% url 'shopper_dashboard' %}" class="shop-logo">INSTRWEAR</a>
 
-        <a href="{% url 'shopper_onboarding' %}" class="profile-btn">
-            <div class="profile-img">👤</div>
-            <span class="profile-name">
-                {{ request.user.first_name|default:"SHOPPER"|upper }}
+        <a href="{% url 'shopper_onboarding' %}" class="shop-profile-btn">
+            <span class="shop-profile-avatar">
+                {{ request.user.first_name|default:"S"|slice:":1"|upper }}
+            </span>
+            <span class="shop-profile-name">
+                {{ request.user.first_name|default:"Shopper"|upper }}
             </span>
         </a>
     </header>
 
-    <main class="main">
-        <div class="welcome">
-            <div class="badge-float">SHOPPER</div>
-            <h1 class="welcome-title">
-                HEY, {{ request.user.first_name|default:"SHOPPER"|upper }}!
+    <main class="shop-main">
+        <section class="shop-welcome-card">
+            <div class="shop-badge-float">LIVE SHOPPER</div>
+            <h1 class="shop-welcome-title">
+                HEY {{ request.user.first_name|default:"SHOPPER"|upper }}
             </h1>
-            <p class="welcome-subtitle">Your Fashion Dashboard</p>
-        </div>
+            <p class="shop-welcome-subtitle">
+                Browse local fashion, manage your cart, and keep your orders moving.
+            </p>
+        </section>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">📦</div>
-                <div class="stat-value">{{ request.user.orders.count }}</div>
-                <div class="stat-label">Total Orders</div>
+        <section class="shop-stats-grid">
+            <article class="shop-stat-card">
+                <div class="shop-stat-icon">🛍</div>
+                <div class="shop-stat-value">24/7</div>
+                <div class="shop-stat-label">Browse Ready</div>
+            </article>
+
+            <article class="shop-stat-card">
+                <div class="shop-stat-icon">⚡</div>
+                <div class="shop-stat-value">FAST</div>
+                <div class="shop-stat-label">Local Delivery</div>
+            </article>
+
+            <article class="shop-stat-card">
+                <div class="shop-stat-icon">🛒</div>
+                <div class="shop-stat-value">LIVE</div>
+                <div class="shop-stat-label">Cart Access</div>
+            </article>
+
+            <article class="shop-stat-card">
+                <div class="shop-stat-icon">📦</div>
+                <div class="shop-stat-value">TRACK</div>
+                <div class="shop-stat-label">Your Orders</div>
+            </article>
+        </section>
+
+        <section class="shop-section">
+            <div class="shop-section-header">
+                <h2 class="shop-section-title">QUICK ACTIONS</h2>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-icon">🛍️</div>
-                <div class="stat-value">LIVE</div>
-                <div class="stat-label">Marketplace</div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">⚡</div>
-                <div class="stat-value">FAST</div>
-                <div class="stat-label">London Delivery</div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">👤</div>
-                <div class="stat-value">READY</div>
-                <div class="stat-label">Account Status</div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">
-                <h2 class="section-title">QUICK ACTIONS</h2>
-                <a href="{% url 'shopper_product_list' %}" class="view-all">SHOP NOW →</a>
-            </div>
-
-            <div class="quick-actions">
-                <a href="{% url 'shopper_product_list' %}" class="action-card">
-                    <div class="action-title">Browse Products</div>
-                    <div class="action-text">Explore what merchants have listed and start shopping.</div>
+            <div class="shop-actions-grid">
+                <a href="{% url 'shopper_product_list' %}" class="shop-action-card">
+                    <h3 class="shop-action-title">Browse Products</h3>
+                    <p class="shop-action-text">
+                        Explore the marketplace and open product details with a clearer mobile-first experience.
+                    </p>
                 </a>
 
-                <a href="{% url 'shopper_orders' %}" class="action-card">
-                    <div class="action-title">View Orders</div>
-                    <div class="action-text">Check current and past orders from your shopper account.</div>
+                <a href="{% url 'cart_view' %}" class="shop-action-card">
+                    <h3 class="shop-action-title">Open Cart</h3>
+                    <p class="shop-action-text">
+                        Review selected items, update quantities, and move straight into checkout.
+                    </p>
                 </a>
 
-                <a href="{% url 'shopper_onboarding' %}" class="action-card">
-                    <div class="action-title">Update Profile</div>
-                    <div class="action-text">Edit your contact details, delivery address, and profile image.</div>
+                <a href="{% url 'shopper_orders' %}" class="shop-action-card">
+                    <h3 class="shop-action-title">View Orders</h3>
+                    <p class="shop-action-text">
+                        Check previous purchases and keep track of delivery progress.
+                    </p>
                 </a>
             </div>
-        </div>
+        </section>
 
-        <div class="section">
-            <div class="section-header">
-                <h2 class="section-title">ORDER HISTORY</h2>
-                <a href="{% url 'shopper_orders' %}" class="view-all">VIEW ALL →</a>
+        <section class="shop-section">
+            <div class="shop-section-header">
+                <h2 class="shop-section-title">START HERE</h2>
+                <a href="{% url 'shopper_product_list' %}" class="shop-view-all">SHOP NOW</a>
             </div>
 
-            {% if request.user.orders.count %}
-                <div class="order-card">
-                    <div class="order-header">
-                        <span class="order-id">YOU HAVE {{ request.user.orders.count }} ORDER{{ request.user.orders.count|pluralize }}</span>
-                        <span class="order-status">TRACK FROM ORDERS</span>
-                    </div>
-                    <div class="order-items">
-                        <div class="item-image">📦</div>
-                        <div class="item-info">
-                            <div class="item-name">Your full order list is available on the Orders page</div>
-                            <div class="item-store">Tap “View All” to open shopper order history</div>
-                        </div>
-                        <div class="order-total">→</div>
+            <article class="shop-order-card">
+                <div class="shop-order-header">
+                    <div class="shop-order-id">READY TO DISCOVER NEW ITEMS?</div>
+                    <div class="shop-order-status">GO LIVE</div>
+                </div>
+
+                <div class="shop-order-items">
+                    <div class="shop-item-image">👕</div>
+                    <div class="shop-item-info">
+                        <div class="shop-item-name">Browse the latest products</div>
+                        <div class="shop-item-store">Find local fashion from merchants on InstrWear</div>
                     </div>
                 </div>
-            {% else %}
-                <div class="order-card">
-                    <div class="order-header">
-                        <span class="order-id">NO ORDERS YET</span>
-                        <span class="order-status">START SHOPPING</span>
-                    </div>
-                    <div class="order-items">
-                        <div class="item-image">🛍️</div>
-                        <div class="item-info">
-                            <div class="item-name">Your order history will appear here once checkout is wired</div>
-                            <div class="item-store">Browse products to start the customer purchase journey</div>
-                        </div>
-                        <div class="order-total">NEW</div>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
+
+                <div class="shop-order-total">MOBILE-FIRST</div>
+            </article>
+        </section>
     </main>
 
-    <nav class="bottom-nav">
-        <a href="{% url 'landing' %}" class="nav-item">
-            <div class="nav-icon">🏠</div>
-            <div class="nav-label">Home</div>
+    <nav class="shop-bottom-nav" aria-label="Bottom navigation">
+        <a href="{% url 'shopper_dashboard' %}" class="shop-nav-item active">
+            <div class="shop-nav-icon">🏠</div>
+            <div class="shop-nav-label">Home</div>
         </a>
 
-        <a href="{% url 'shopper_product_list' %}" class="nav-item">
-            <div class="nav-icon">🔍</div>
-            <div class="nav-label">Browse</div>
+        <a href="{% url 'shopper_product_list' %}" class="shop-nav-item">
+            <div class="shop-nav-icon">🔍</div>
+            <div class="shop-nav-label">Browse</div>
         </a>
 
-        <a href="{% url 'shopper_dashboard' %}" class="nav-item active">
-            <div class="nav-icon">📊</div>
-            <div class="nav-label">Dash</div>
+        <a href="{% url 'cart_view' %}" class="shop-nav-item">
+            <div class="shop-nav-icon">🛒</div>
+            <div class="shop-nav-label">Cart</div>
         </a>
 
-        <a href="{% url 'shopper_orders' %}" class="nav-item">
-            <div class="nav-icon">📦</div>
-            <div class="nav-label">Orders</div>
+        <a href="{% url 'shopper_orders' %}" class="shop-nav-item">
+            <div class="shop-nav-icon">📦</div>
+            <div class="shop-nav-label">Orders</div>
         </a>
 
-        <a href="{% url 'logout' %}" class="nav-item">
-            <div class="nav-icon">🚪</div>
-            <div class="nav-label">Logout</div>
+        <a href="{% url 'logout' %}" class="shop-nav-item">
+            <div class="shop-nav-icon">🚪</div>
+            <div class="shop-nav-label">Logout</div>
         </a>
     </nav>
-
-    <!--Start of Tawk.to Script-->
-    <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/69b4593c6ccaea1c3830fc4f/1jjk7p5fv';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
-    </script>
-    <!--End of Tawk.to Script-->
 </body>
 </html>
