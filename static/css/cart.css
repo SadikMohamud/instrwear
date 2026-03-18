@@ -1,128 +1,362 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INSTRWEAR - SHOPPING CART</title>
+/*
+Author: Sadik Mohamud
+Project: InstrWear
+File: static/css/cart.css
+Purpose: Mobile-first cart styling with room for GSAP add-to-cart feedback.
+*/
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
-</head>
-<body class="cart-page">
-    <header class="cart-header">
-        <a href="{% url 'shopper_dashboard' %}" class="cart-logo">INSTRWEAR</a>
-        <a href="{% url 'shopper_product_list' %}" class="cart-back-btn">← Continue Shopping</a>
-    </header>
+:root {
+    --bg: #fffdf5;
+    --fg: #000000;
+    --accent: #ff6b6b;
+    --secondary: #ffd93d;
+    --muted: #c4b5fd;
+    --white: #ffffff;
+    --border: 4px solid #000000;
+    --shadow: 4px 4px 0 0 #000000;
+    --shadow-lg: 8px 8px 0 0 #000000;
+    --shadow-xl: 12px 12px 0 0 #000000;
+}
 
-    <main class="cart-main">
-        {% if messages %}
-            <div class="cart-messages">
-                {% for message in messages %}
-                    <div class="cart-message {{ message.tags }}{% if message.tags == 'success' %} js-cart-added-message{% endif %}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+body.cart-page {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    min-height: 100vh;
+    position: relative;
+}
 
-        <h1 class="cart-page-title">YOUR CART</h1>
+body.cart-page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(#000 1.5px, transparent 1.5px);
+    background-size: 25px 25px;
+    opacity: 0.02;
+    pointer-events: none;
+}
 
-        {% if cart.items.all %}
-            <div class="cart-layout">
-                <section class="cart-items">
-                    {% for item in cart.items.all %}
-                        <article class="cart-item{% if forloop.first %} js-cart-added-item{% endif %}">
-                            <div class="cart-item-image">
-                                {% if item.product.image %}
-                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
-                                {% else %}
-                                    <span>👕</span>
-                                {% endif %}
-                            </div>
+.cart-header,
+.cart-main {
+    position: relative;
+    z-index: 1;
+}
 
-                            <div class="cart-item-details">
-                                <div class="cart-item-shop">
-                                    {% if item.product.merchant.merchant_profile.business_name %}
-                                        {{ item.product.merchant.merchant_profile.business_name }}
-                                    {% else %}
-                                        {{ item.product.merchant.first_name|default:item.product.merchant.email }}
-                                    {% endif %}
-                                </div>
+.cart-header {
+    background: var(--white);
+    border-bottom: var(--border);
+    box-shadow: 0 4px 0 0 #000;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+}
 
-                                <h2 class="cart-item-name">{{ item.product.name }}</h2>
-                                <div class="cart-item-price">£{{ item.product.price }}</div>
-                                <div class="cart-item-stock">Available stock: {{ item.product.stock }}</div>
-                            </div>
+.cart-logo {
+    text-decoration: none;
+    color: var(--fg);
+    font-size: 1.15rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
 
-                            <div class="cart-item-controls">
-                                <form method="POST" action="{% url 'update_cart_item' item.id %}" class="cart-quantity-form">
-                                    {% csrf_token %}
-                                    <label class="cart-qty-label" for="qty-{{ item.id }}">Quantity</label>
-                                    <input
-                                        id="qty-{{ item.id }}"
-                                        type="number"
-                                        name="quantity"
-                                        min="0"
-                                        max="{{ item.product.stock }}"
-                                        value="{{ item.quantity }}"
-                                        class="cart-qty-input"
-                                    >
-                                    <button type="submit" class="cart-save-btn">Save</button>
-                                </form>
+.cart-back-btn,
+.cart-continue-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--fg);
+    background: var(--white);
+    border: var(--border);
+    box-shadow: var(--shadow);
+    padding: 12px 14px;
+    font-size: 0.76rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
 
-                                <a href="{% url 'remove_cart_item' item.id %}" class="cart-remove-btn" aria-label="Remove {{ item.product.name }}">
-                                    Remove
-                                </a>
-                            </div>
-                        </article>
-                    {% endfor %}
-                </section>
+.cart-main {
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 20px 16px 36px;
+}
 
-                <aside class="cart-summary">
-                    <div class="cart-summary-card">
-                        <h2 class="cart-summary-title">ORDER SUMMARY</h2>
+.cart-messages {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 20px;
+}
 
-                        <div class="cart-summary-row">
-                            <span>Items</span>
-                            <span>{{ cart.items.count }}</span>
-                        </div>
+.cart-message {
+    border: var(--border);
+    box-shadow: var(--shadow);
+    padding: 12px 14px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    background: var(--white);
+    text-transform: uppercase;
+}
 
-                        <div class="cart-summary-row">
-                            <span>Subtotal</span>
-                            <span>£{{ cart.total_price }}</span>
-                        </div>
+.cart-message.error { background: #ffe3e3; }
+.cart-message.success { background: #dcfce7; }
+.cart-message.warning { background: #fff3cd; }
 
-                        <div class="cart-summary-row">
-                            <span>Delivery</span>
-                            <span>£0.00</span>
-                        </div>
+.cart-page-title {
+    font-size: clamp(2rem, 12vw, 4.2rem);
+    line-height: 0.95;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+}
 
-                        <div class="cart-summary-total">
-                            <span>Total</span>
-                            <strong>£{{ cart.total_price }}</strong>
-                        </div>
+.cart-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+}
 
-                        <a href="{% url 'checkout_view' %}" class="cart-checkout-btn">Checkout →</a>
-                        <a href="{% url 'shopper_product_list' %}" class="cart-continue-link">Keep Shopping</a>
-                    </div>
-                </aside>
-            </div>
-        {% else %}
-            <section class="cart-empty-state">
-                <h2>Your cart is empty</h2>
-                <p>Start browsing products and add something great to your basket.</p>
-                <a href="{% url 'shopper_product_list' %}" class="cart-checkout-btn cart-checkout-btn--inline">
-                    Browse Products
-                </a>
-            </section>
-        {% endif %}
-    </main>
+.cart-items {
+    display: grid;
+    gap: 18px;
+}
 
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-    <script src="{% static 'js/cart.js' %}"></script>
-</body>
-</html>
+.cart-item {
+    background: var(--white);
+    border: var(--border);
+    box-shadow: var(--shadow-xl);
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.cart-item-image {
+    width: 100%;
+    min-height: 220px;
+    background: linear-gradient(135deg, var(--muted), var(--secondary));
+    border: var(--border);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-item-image img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+}
+
+.cart-item-image span {
+    font-size: 4rem;
+}
+
+.cart-item-shop {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(0,0,0,0.65);
+    margin-bottom: 8px;
+}
+
+.cart-item-name {
+    font-size: 1.2rem;
+    line-height: 1.1;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.cart-item-price {
+    font-size: 1.55rem;
+    font-weight: 900;
+    color: var(--accent);
+    margin-bottom: 8px;
+}
+
+.cart-item-stock {
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.cart-item-controls {
+    display: grid;
+    gap: 12px;
+    align-content: start;
+}
+
+.cart-quantity-form {
+    display: grid;
+    gap: 10px;
+}
+
+.cart-qty-label {
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.cart-qty-input,
+.cart-save-btn,
+.cart-remove-btn,
+.cart-checkout-btn {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.cart-qty-input {
+    width: 100%;
+    min-height: 52px;
+    border: var(--border);
+    box-shadow: var(--shadow);
+    padding: 12px 14px;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.cart-save-btn,
+.cart-remove-btn,
+.cart-checkout-btn {
+    min-height: 52px;
+    border: var(--border);
+    box-shadow: var(--shadow);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 16px;
+    font-size: 0.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.cart-save-btn {
+    background: var(--fg);
+    color: var(--white);
+    cursor: pointer;
+}
+
+.cart-remove-btn {
+    background: var(--white);
+    color: var(--fg);
+}
+
+.cart-summary-card,
+.cart-empty-state {
+    background: var(--white);
+    border: var(--border);
+    box-shadow: var(--shadow-xl);
+    padding: 18px;
+}
+
+.cart-summary-title {
+    font-size: 1.2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.cart-summary-row,
+.cart-summary-total {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.cart-summary-row {
+    padding: 12px 0;
+    border-bottom: 3px solid #000;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.cart-summary-total {
+    padding: 16px 0 18px;
+    font-size: 1.1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.cart-checkout-btn {
+    width: 100%;
+    background: var(--accent);
+    color: var(--white);
+    margin-bottom: 12px;
+}
+
+.cart-checkout-btn--inline {
+    width: auto;
+    margin-top: 18px;
+    margin-bottom: 0;
+}
+
+.cart-empty-state h2 {
+    font-size: 1.6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.cart-empty-state p {
+    font-size: 0.98rem;
+    line-height: 1.7;
+    font-weight: 700;
+}
+
+@media (min-width: 640px) {
+    .cart-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 22px;
+    }
+
+    .cart-main {
+        padding: 28px 22px 44px;
+    }
+
+    .cart-item {
+        grid-template-columns: 180px minmax(0, 1fr);
+    }
+
+    .cart-item-image,
+    .cart-item-image img {
+        min-height: 180px;
+        height: 180px;
+    }
+}
+
+@media (min-width: 992px) {
+    .cart-main {
+        padding: 34px 28px 56px;
+    }
+
+    .cart-layout {
+        grid-template-columns: minmax(0, 1fr) 340px;
+        align-items: start;
+    }
+
+    .cart-summary {
+        position: sticky;
+        top: 110px;
+    }
+
+    .cart-item {
+        grid-template-columns: 180px minmax(0, 1fr) 220px;
+        align-items: start;
+    }
+}

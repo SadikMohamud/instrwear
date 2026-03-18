@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 import dj_database_url
 from dotenv import load_dotenv
@@ -23,7 +24,33 @@ CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME", "")
 CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY", "")
 CLOUDINARY_API_SECRET = os.getenv("CLOUDINARY_API_SECRET", "")
 
-USE_CLOUDINARY = bool(CLOUDINARY_URL) or all(
+
+def _cloudinary_credentials_from_url(url):
+    """
+    Parse CLOUDINARY_URL in the format cloudinary://<api_key>:<api_secret>@<cloud_name>.
+    """
+    if not url:
+        return "", "", ""
+
+    parsed = urlparse(url)
+    if parsed.scheme != "cloudinary" or "@" not in parsed.netloc:
+        return "", "", ""
+
+    credentials, cloud_name = parsed.netloc.split("@", 1)
+    if ":" not in credentials:
+        return "", "", ""
+
+    api_key, api_secret = credentials.split(":", 1)
+    return cloud_name, api_key, api_secret
+
+
+if CLOUDINARY_URL and not all([CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET]):
+    parsed_cloud_name, parsed_api_key, parsed_api_secret = _cloudinary_credentials_from_url(CLOUDINARY_URL)
+    CLOUDINARY_CLOUD_NAME = CLOUDINARY_CLOUD_NAME or parsed_cloud_name
+    CLOUDINARY_API_KEY = CLOUDINARY_API_KEY or parsed_api_key
+    CLOUDINARY_API_SECRET = CLOUDINARY_API_SECRET or parsed_api_secret
+
+USE_CLOUDINARY = all(
     [CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET]
 )
 
