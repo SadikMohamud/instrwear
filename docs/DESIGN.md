@@ -133,23 +133,6 @@ Key measures include:
 
 ---
 
-## Wireframes
-
-Add your wireframes below once completed.
-
-### Landing Page Wireframe
-![Landing Page Wireframe](../assets/screenshots/wireframe-landing.png)
-
-### Product Listing Wireframe
-![Product Listing Wireframe](../assets/screenshots/wireframe-product-list.png)
-
-### Checkout Wireframe
-![Checkout Wireframe](../assets/screenshots/wireframe-checkout.png)
-
-### Merchant Flow Wireframe
-![Merchant Flow Wireframe](../assets/screenshots/wireframe-merchant-flow.png)
-
----
 
 ## Agile Design Process
 
