@@ -47,7 +47,7 @@ https://instrwear-8184ce115d49.herokuapp.com/
 
 ![Landing Page](../assets/screenshots/landing.png)
 ![Login](../assets/screenshots/log-in.png)
-![InstrWear AI](../assets/screenshots/instrwearAi.png)
+![InstrWear AI](../assets/screenshots/InstrwearAi.png)
 ![Cart](../assets/screenshots/cart.png)
 ![Order Confirmation](../assets/screenshots/order-confirmation.png)
 ![Stripe Checkout](../assets/screenshots/stripe-checkout.png)
