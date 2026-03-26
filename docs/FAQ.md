@@ -1,23 +1,19 @@
-# Frequently Asked Questions
+# FAQ
 
-## What is InstrWear?
+## Is this a finished product?
+No, this is an MVP.
 
-InstrWear is an on-demand clothing delivery platform connecting users with local merchants.
+## Does authentication work?
+Yes.
 
----
+## Is filtering implemented?
+Yes.
 
-## How are payments handled?
-
-Payments are processed securely using Stripe.
-
----
-
-## Is customer support available?
-
-Yes. The platform includes an AI-powered assistant via Tawk.to.
-
----
+## Is search implemented?
+No.
 
 ## Can merchants manage products?
+Yes.
 
-Merchant functionality is implemented at the profile level, with further expansion planned.
+## What tools were used?
+Django, PostgreSQL, Figma, DesignPrompt.dev, ChatGPT, Copilot.
