@@ -1,143 +1,119 @@
-# InstrWear
+# InstrWear Documentation
 
 ## Overview
 
-InstrWear is a full-stack Django web application that enables on-demand clothing delivery from local merchants. The platform allows users to browse, purchase, and receive clothing items efficiently through an integrated payment system powered by Stripe.
+InstrWear is a full-stack Django web application that connects shoppers and merchants in a fashion marketplace.
 
-The application implements a multi-role architecture supporting both shoppers and merchants, and integrates third-party services to enhance user experience, including Stripe for payments and Tawk.to for AI-powered customer support.
+This project is an MVP (Minimum Viable Product) designed to demonstrate:
 
----
-
-## Project Objectives
-
-- Develop a full-stack application using Django
-- Implement role-based authentication (shopper and merchant)
-- Integrate secure payment processing using Stripe
-- Provide AI-powered customer support using Tawk.to
-- Simulate a scalable marketplace platform
+- Full-stack development with Django
+- Role-Based Access Control (RBAC)
+- Structured onboarding flows
+- Marketplace functionality (products, cart, checkout)
 
 ---
 
-## User Experience (UX)
+## Live Project
 
-### User Goals
-
-#### Shopper
-- Register and log in securely
-- Browse available products
-- Complete purchases using Stripe
-- Receive support via AI chat assistant
-
-#### Merchant
-- Register as a merchant
-- Create and manage a business profile
-
----
-
-## User Flow
-
-### Shopper Journey
-
-1. Visit landing page  
-2. Register account  
-3. Log in  
-4. Browse products  
-5. Select item  
-6. Checkout  
-7. Complete Stripe payment  
-8. Receive confirmation  
-
-### Merchant Journey
-
-1. Register account  
-2. Select merchant role  
-3. Create business profile  
-4. Manage account  
+https://instrwear-8184ce115d49.herokuapp.com/
 
 ---
 
 ## Features
 
-### Implemented Features
-
-- Custom user model with role-based access
-- Merchant profile system
-- User authentication (register/login)
-- Stripe payment integration
-- AI-powered customer support (Tawk.to)
-- Backend payment confirmation flow
+- User & merchant authentication
+- Role-Based Access Control (RBAC)
+- Onboarding flows for shoppers and merchants
+- Product filtering by category (no search implemented)
+- Product CRUD functionality (merchant)
+- Shopping cart system
+- Stripe checkout integration
+- Order tracking
+- Responsive, mobile-first UI
 
 ---
 
-### Future Features
+## Tech Stack
 
-- Real-time delivery tracking
-- Merchant dashboard
-- Product recommendation system
+- Backend: Django (Python)
+- Frontend: HTML, CSS, JavaScript
+- Database (Development): SQLite
+- Database (Production): PostgreSQL (Heroku)
+- Design: Figma + DesignPrompt.dev
 
 ---
 
 ## Screenshots
 
-### Landing Page
-![Landing](../assets/screenshots/landing.png)
-
-### Multi-Role Log-in Page
-![Register](../assets/screenshots/log-in.png)
-
-### Stripe Checkout
-![Stripe](../assets/screenshots/stripe-checkout.png)
-
-### Order Cart
-![Chat](../assets/screenshots/cart.png)
-
-### Order Confirmation
-![Chat](../assets/screenshots/order-confirmation.png)
-
-
-### AI Customer Support
-![Chat](../assets/screenshots/InstrwearAi.png)
+![Landing Page](../assets/screenshots/landing.png)
+![Login](../assets/screenshots/log-in.png)
+![InstrWear AI](../assets/screenshots/instrwearAi.png)
+![Cart](../assets/screenshots/cart.png)
+![Order Confirmation](../assets/screenshots/order-confirmation.png)
+![Stripe Checkout](../assets/screenshots/stripe-checkout.png)
 
 ---
 
-## Database Design
+## User & Merchant Flows
 
-![ERD](../assets/erd/instrwear-erd.png)
+### Shopper Flow
+1. Register account  
+2. Login  
+3. Complete onboarding  
+4. Access dashboard  
+5. Filter products by category  
+6. Add items to cart  
+7. Checkout via Stripe  
 
----
-
-## Technologies Used
-
-- HTML5, CSS3, JavaScript  
-- Python, Django  
-- SQLite (development)  
-- PostgreSQL (production via Heroku)  
-- Stripe API  
-- Tawk.to  
-
----
-
-## Documentation
-
-Detailed documentation can be found in the following files:
-
-- [Design](DESIGN.md)
-- [Testing](TESTING.md)
-- [Deployment](DEPLOYMENT.md)
-- [FAQ](FAQ.md)
+### Merchant Flow
+1. Register account  
+2. Complete onboarding  
+3. Access merchant dashboard  
+4. Add, edit, and manage products  
 
 ---
 
-## Credits
+## Project Structure
 
-- Django Documentation  
-- Stripe Documentation  
-- Code Institute Learning Materials  
+- `accounts/` → authentication & user roles  
+- `marketplace/` → products, cart, orders  
+- `core/` → shared utilities & decorators  
+- `templates/` → frontend templates  
+- `static/` → CSS & JS  
+- `media/` → uploaded images  
+- `assets/screenshots/` → documentation images  
+- `docs/` → project documentation  
 
-### Design Attribution
+---
 
-Design inspiration generated using prompts from:
+## AI & Development Transparency
 
-https://www.designprompts.dev/
+During development, I relied heavily on:
 
-(Full prompt included in DESIGN.md)
+- GitHub Copilot  
+- ChatGPT  
+- Figma AI  
+- DesignPrompt.dev (Neo-Brutalist template)  
+
+All outputs were reviewed and implemented manually to ensure full understanding.
+
+---
+
+## Limitations (MVP)
+
+- No search functionality (filters only)  
+- No public API (Django views only)  
+- Limited automated testing  
+- Basic UI/UX in some areas  
+
+---
+
+## Future Improvements
+
+- Add search functionality  
+- Separate merchant public profiles  
+- Courier/delivery system  
+- Messaging system  
+- Notifications  
+- API with Django REST Framework  
+- Performance optimisation
