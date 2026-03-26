@@ -1,39 +1,42 @@
-# Deployment
+# Deployment Guide
 
-## Overview
+## Development Environment
 
-The application is deployed using Heroku.
+- Database: SQLite
 
----
+Run locally:
 
-## Database
-
-- SQLite is used during development
-- PostgreSQL is used in production via Heroku
+python manage.py migrate  
+python manage.py runserver  
 
 ---
 
-## Deployment Steps
+## Production (Heroku)
 
-1. Create Heroku application  
-2. Configure environment variables  
-3. Add Procfile  
-4. Install dependencies  
-5. Run migrations  
-6. Deploy via Git  
+- Database: PostgreSQL
 
----
+### Steps
 
-## Environment Variables
+1. Push project to GitHub  
+2. Create Heroku app  
+3. Connect GitHub repo  
+4. Set environment variables (including DATABASE_URL)  
+5. Run migrations:
 
-- SECRET_KEY  
-- DATABASE_URL  
-- STRIPE_PUBLIC_KEY  
-- STRIPE_SECRET_KEY  
+heroku run python manage.py migrate  
+
+6. Collect static files:
+
+heroku run python manage.py collectstatic --noinput  
+
+7. Open app:
+
+https://instrwear-8184ce115d49.herokuapp.com/
 
 ---
 
 ## Notes
 
-- Static files configured for deployment
-- Debug mode disabled in production
+- SQLite used for development  
+- PostgreSQL used in production  
+- Static files handled via collectstatic
